@@ -1,0 +1,16 @@
+{
+  "name": "Tanganyika – Sky Wings Academy",
+  "short_name": "TSA Gradebook",
+  "description": "Primary & Secondary wing gradebook. Developed by Rasul A. Mngazija.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a8f3c",
+  "theme_color": "#0a8f3c",
+  "lang": "en",
+  "icons": [
+    { "src": "assets/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

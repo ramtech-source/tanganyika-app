@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<meta name="theme-color" content="#0a8f3c" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="apple-touch-icon" href="assets/logo.png" />
+<link rel="manifest" href="manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Sky Wings" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="TSA Gradebook" />
+<meta name="msapplication-TileColor" content="#0a8f3c" />
+<meta name="msapplication-TileImage" content="assets/logo.png" />
+<title>Tanganyika – Sky Wings Academy | Academic Management System</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#0b3d91; --green:#0a8f3c; --green2:#07702e; --teal:#00a99d;
+  --gold:#f5c518; --gold2:#ffd84d;
+  --bg:#f4f6fb; --card:#fff; --ink:#1c2333; --muted:#6b7280;
+  --line:#e2e6ef; --ok:#1b8a4c; --warn:#c77d0a; --bad:#c62828;
+  --radius:14px; --shadow:0 10px 30px rgba(12,30,70,.10);
+  --font:'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
+button{cursor:pointer;border:none;background:none}
+a{color:var(--brand);text-decoration:none}
+img{max-width:100%}
+.hidden{display:none !important}
+.muted{color:var(--muted)}.small{font-size:12.5px}
+.mt1{margin-top:8px}.mt2{margin-top:16px}.mt3{margin-top:24px}
+.mb1{margin-bottom:8px}.mb2{margin-bottom:16px}.mb3{margin-bottom:24px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.row.between{justify-content:space-between}
+.grow{flex:1}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+.pill.green{background:#e6f6ec;color:#1b8a4c}
+.pill.red{background:#fdeaea;color:#c62828}
+.pill.amber{background:#fdf3e3;color:#c77d0a}
+.pill.blue{background:#e8f0fe;color:#0b3d91}
+.pill.grey{background:#eef1f6;color:#4b5563}
+.pill.purple{background:#ede9fe;color:#6d28d9}
+
+#loginView{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden;
+  background:radial-gradient(1200px 600px at 8% 8%, rgba(245,197,24,.35), transparent 55%),
+             radial-gradient(1000px 600px at 92% 92%, rgba(245,197,24,.22), transparent 60%),
+             linear-gradient(135deg,#0a8f3c 0%,#07702e 45%,#033d18 100%);}
+#loginView::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:44px 44px;pointer-events:none;}
+.login-card{position:relative;z-index:2;width:100%;max-width:980px;display:grid;grid-template-columns:1.05fr .95fr;
+  background:rgba(255,255,255,.985);border-radius:22px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);border:3px solid var(--gold);}
+.login-brand{background:linear-gradient(160deg,#0a8f3c,#033d18);color:#fff;padding:42px 36px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.login-brand::after{content:"";position:absolute;right:-60px;bottom:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(245,197,24,.55),transparent 70%);}
+.login-logo{width:130px;height:130px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  border:4px solid var(--gold);margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:10px;}
+.login-logo img{width:100%;height:100%;object-fit:contain}
+.login-logo span{font-size:38px;font-weight:900;color:var(--green)}
+.login-brand h1{font-size:23px;line-height:1.25;margin-bottom:6px;color:#fff}
+.login-brand .sub{color:var(--gold2);font-size:13.5px;font-weight:700;letter-spacing:1px;margin-bottom:16px;text-transform:uppercase}
+.login-brand .desc{font-size:12.6px;color:#d6f4e0;max-width:320px;line-height:1.5}
+.login-brand ul{list-style:none;margin-top:14px}
+.login-brand li{font-size:12.8px;color:#e8fbf0;padding:4px 0 4px 22px;position:relative}
+.login-brand li::before{content:"★";position:absolute;left:0;color:var(--gold);font-weight:800;font-size:11px}
+.login-form{padding:42px 36px;display:flex;flex-direction:column;justify-content:center;background:#fff}
+.login-form h2{font-size:22px;margin-bottom:4px;color:var(--green)}
+.login-form p.lead{color:var(--muted);font-size:13px;margin-bottom:22px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:800;color:#374151;margin-bottom:6px;text-transform:uppercase}
+.input-wrap{position:relative}
+.input-wrap input{width:100%;padding:13px 44px 13px 14px;border:2px solid var(--line);border-radius:11px;background:#fbfcfe;outline:none;font-size:14px;}
+.input-wrap input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(10,143,60,.15);background:#fff}
+.toggle-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);padding:6px 8px;border-radius:8px;color:var(--muted);font-size:14px;}
+.toggle-eye:hover{background:#eafaf0;color:var(--green)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px;transition:.18s;border:1.5px solid transparent;}
+.btn.primary{background:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green2)}
+.btn.gold{background:var(--gold);color:#2b2200}
+.btn.gold:hover{background:var(--gold2)}
+.btn.ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--green);color:var(--green)}
+.btn.danger{background:#c62828;color:#fff}
+.btn.danger:hover{background:#a81f1f}
+.btn.sm{padding:7px 12px;font-size:12.5px;border-radius:9px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.login-actions{display:flex;justify-content:space-between;align-items:center;margin:4px 0 18px}
+.check{display:flex;align-items:center;gap:8px;font-size:12.8px;color:#374151}
+.status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px}
+.status-dot.on{background:#1b8a4c;box-shadow:0 0 0 4px rgba(27,138,76,.18)}
+.status-dot.off{background:#c77d0a;box-shadow:0 0 0 4px rgba(199,125,10,.18)}
+#loginBtn{background:linear-gradient(135deg,#0a8f3c,#07702e) !important;border:2px solid var(--gold) !important;box-shadow:0 6px 18px rgba(10,143,60,.35);letter-spacing:1px;}
+.login-foot{font-size:11.6px;color:var(--muted);text-align:center;margin-top:18px}
+@media(max-width:860px){.login-card{grid-template-columns:1fr}.login-brand{padding:30px 24px}.login-form{padding:30px 24px}}
+
+.term-picker{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:12px}
+.term-card{position:relative;background:#fff;border:2px solid var(--line);border-radius:14px;padding:22px 14px;text-align:center;cursor:pointer;transition:.18s}
+.term-card:hover{border-color:var(--green);box-shadow:0 8px 24px rgba(10,143,60,.18);transform:translateY(-2px)}
+.term-card .icon{font-size:32px;margin-bottom:8px}
+.term-card h4{font-size:15px;color:var(--green);margin-bottom:4px}
+.term-card p{font-size:11.5px;color:var(--muted)}
+.term-card.selected{border-color:var(--gold);background:#fffdf0}
+.term-card.selected::after{content:"✓";position:absolute;top:6px;right:10px;color:var(--green);font-weight:900}
+
+.wing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.wing-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.18s}
+.wing-card:hover{border-color:var(--green);box-shadow:0 8px 24px rgba(10,143,60,.18);transform:translateY(-2px)}
+.wing-card .icon{font-size:36px;margin-bottom:8px}
+.wing-card h4{font-size:16px;color:var(--green);margin-bottom:4px}
+.wing-card p{font-size:12px;color:var(--muted)}
+@media(max-width:620px){.wing-grid{grid-template-columns:1fr}}
+
+#app{display:none;min-height:100vh}
+#app.on{display:flex}
+.sidebar{width:260px;background:linear-gradient(180deg,#0a8f3c,#033d18);color:#fff;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:50;transition:transform .25s ease;overflow-y:auto;border-right:3px solid var(--gold);}
+.sidebar .brand{padding:16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,.12)}
+.sidebar .brand .logo{width:56px;height:56px;border-radius:10px;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center;border:2px solid var(--gold);flex:none;padding:4px;}
+.sidebar .brand .logo img{width:100%;height:100%;object-fit:contain}
+.sidebar .brand .logo span{color:var(--green);font-weight:800;font-size:16px}
+.sidebar .brand .txt strong{display:block;font-size:13px;line-height:1.2}
+.sidebar .brand .txt small{color:#c8efd6;font-size:10.5px}
+.wing-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;margin-top:3px}
+.wing-badge.primary{background:#e0f5f3;color:#008c82}
+.wing-badge.secondary{background:#ede9fe;color:#6d28d9}
+.nav{padding:12px 8px;flex:1}
+.nav .group{font-size:10.5px;letter-spacing:1.1px;text-transform:uppercase;color:#ffd84d;padding:14px 12px 6px;font-weight:800}
+.nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#e6faf0;font-size:13.4px;font-weight:600;margin-bottom:2px;transition:.15s;}
+.nav a:hover{background:rgba(255,255,255,.10);color:#fff}
+.nav a.active{background:linear-gradient(90deg,rgba(245,197,24,.35),rgba(245,197,24,.10));color:#fff;border-left:3px solid var(--gold)}
+.nav a .ic{width:20px;text-align:center;font-size:15px;flex:none}
+.sidebar .foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#c8efd6}
+.sidebar .foot b{color:var(--gold)}
+.main{flex:1;margin-left:260px;display:flex;flex-direction:column;min-width:0}
+.topbar{height:62px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 18px;position:sticky;top:0;z-index:40;flex-wrap:nowrap;}
+.menu-btn{display:none;font-size:20px;padding:6px 10px;border-radius:9px;color:var(--green)}
+.menu-btn:hover{background:#eafaf0}
+.topbar .title{font-weight:800;font-size:16.5px;color:var(--green);flex:none}
+.topbar .title small{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
+.topbar .spacer{flex:1}
+.term-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fff8db;border:2px solid var(--gold);border-radius:10px;font-weight:800;font-size:12.5px;color:#8a5a06;cursor:pointer;transition:.15s;white-space:nowrap;}
+.term-chip:hover{background:var(--gold2)}
+.searchbox{position:relative;max-width:240px;flex:1}
+.searchbox input{width:100%;padding:9px 12px 9px 34px;border:1.5px solid var(--line);border-radius:10px;background:#fbfcfe;outline:none}
+.searchbox input:focus{border-color:var(--green);background:#fff}
+.searchbox::before{content:"🔍";position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.6}
+.userchip{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:11px;border:1.5px solid var(--line);background:#fbfcfe}
+.userchip .av{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
+.userchip .meta strong{display:block;font-size:12.8px;line-height:1.1}
+.userchip .meta small{color:var(--muted);font-size:11px}
+.conn{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.conn.on{background:#e6f6ec;color:#1b8a4c}
+.conn.off{background:#fdf3e3;color:#c77d0a}
+.content{padding:22px;flex:1}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.page-head h2{font-size:20px;color:var(--green)}
+.page-head p{color:var(--muted);font-size:12.8px;margin-top:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.stat{display:flex;align-items:center;gap:13px}
+.stat .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;}
+.stat .ic.blue{background:#e8f0fe;color:#0b3d91}
+.stat .ic.gold{background:#fff8db;color:#c99a00}
+.stat .ic.green{background:#e0f5ea;color:#0a8f3c}
+.stat .ic.red{background:#fdeaea;color:#c62828}
+.stat .ic.purple{background:#ede9fe;color:#6d28d9}
+.stat b{display:block;font-size:22px;line-height:1.1}
+.stat small{color:var(--muted);font-size:12px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.panel .ph{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#fafbfe}
+.panel .ph h3{font-size:14.5px;color:var(--green)}
+.panel .pb{padding:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.toolbar .field{margin:0;min-width:150px}
+.toolbar label{font-size:11.5px}
+.toolbar select,.toolbar input{padding:9px 11px;border:1.5px solid var(--line);border-radius:10px;background:#fff;outline:none;min-width:150px}
+.toolbar select:focus,.toolbar input:focus{border-color:var(--green)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+table.tbl th,table.tbl td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+table.tbl th{background:#f4f7fd;color:#334155;font-size:11.8px;letter-spacing:.4px;text-transform:uppercase;font-weight:800;position:sticky;top:0}
+table.tbl tr:hover td{background:#fafbfe}
+table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+table.tbl td.ctr{text-align:center}
+.badge{display:inline-block;min-width:30px;padding:2px 8px;border-radius:7px;font-weight:800;font-size:11.5px;text-align:center}
+.g-A{background:#e6f6ec;color:#0f6b39}.g-Astar{background:#d9f2e3;color:#0b5c30}
+.g-B{background:#e8f0fe;color:#0b3d91}.g-C{background:#eef4ff;color:#2b5fb0}
+.g-D{background:#fdf3e3;color:#a86a06}.g-E{background:#fdeaea;color:#b71c1c}
+.g-U{background:#fbe4e4;color:#8e1515}
+.bar{height:16px;border-radius:6px;background:#eef2fa;overflow:hidden;min-width:80px}
+.bar>span{display:block;height:100%;border-radius:6px}
+.empty{padding:34px;text-align:center;color:var(--muted)}
+.empty .big{font-size:34px;margin-bottom:8px;opacity:.5}
+.alert{padding:12px 14px;border-radius:11px;font-size:13px;margin-bottom:12px;border:1px solid transparent}
+.alert.info{background:#e8f0fe;color:#0b3d91;border-color:#c7d8f7}
+.alert.ok{background:#e6f6ec;color:#0f6b39;border-color:#bfe6cd}
+.alert.warn{background:#fdf3e3;color:#8a5a06;border-color:#f3ddb0}
+.alert.bad{background:#fdeaea;color:#8e1515;border-color:#f3c2c2}
+.modal-back{position:fixed;inset:0;background:rgba(10,20,40,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal-back.on{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.4);border-top:4px solid var(--gold)}
+.modal .mh{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:#fafbfe;border-radius:16px 16px 0 0}
+.modal .mh h3{font-size:15.5px;color:var(--green)}
+.modal .mb{padding:18px}
+.modal .mf{padding:13px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;background:#fafbfe;border-radius:0 0 16px 16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+@media(max-width:620px){.form-grid{grid-template-columns:1fr}}
+.form-grid label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:5px}
+.form-grid input,.form-grid select,.form-grid textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fbfcfe;outline:none}
+.form-grid input:focus,.form-grid select:focus,.form-grid textarea:focus{border-color:var(--green);background:#fff}
+.sig-pad{border:2px dashed var(--line);border-radius:12px;padding:14px;background:#fbfcfe;text-align:center;cursor:pointer;transition:.18s}
+.sig-pad:hover{border-color:var(--green);background:#f0fdf4}
+.sig-pad.has-sig{border-style:solid;border-color:var(--green);background:#f0fdf4}
+.sig-pad img{max-height:70px;max-width:200px;object-fit:contain}
+.sig-pad .ph{color:var(--muted);font-size:12.5px}
+.toast-wrap{position:fixed;right:16px;bottom:16px;z-index:500;display:flex;flex-direction:column;gap:8px}
+.toast{background:#1c2333;color:#fff;padding:12px 16px;border-radius:11px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.3);min-width:230px;animation:slideIn .25s}
+.toast.ok{background:#1b8a4c}.toast.bad{background:#c62828}.toast.warn{background:#c77d0a}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:980px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:none}
+  .main{margin-left:0}
+  .menu-btn{display:inline-block}
+  .searchbox{display:none}
+  .topbar .title{font-size:14px}
+}
+@media(max-width:620px){.content{padding:14px}.userchip .meta{display:none}.conn{display:none}}
+
+#installBanner{position:fixed;bottom:16px;left:16px;right:16px;max-width:520px;margin:0 auto;background:#0a8f3c;color:#fff;border:3px solid var(--gold);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 14px 40px rgba(0,0,0,.35);z-index:450;}
+#installBanner .ib-text{flex:1}
+#installBanner .ib-text strong{display:block;font-size:14px}
+#installBanner .ib-text .small{color:#d6f4e0;font-size:12px}
+@media(max-width:620px){#installBanner{flex-wrap:wrap}#installBanner .ib-text{flex:1 1 100%}}
+
+/* ============================================================
+   A4 REPORT — v14.5
+   - Top-right info row (Stage/Term/Date) font enlarged
+   - "Year:" replaced with "Stage:" and shows the class name
+   ============================================================ */
+.report-scope{background:#e9edf5;padding:18px;border-radius:14px;overflow-x:auto}
+.a4-report{
+  width:210mm;
+  height:297mm;
+  min-height:297mm;
+  max-height:297mm;
+  background:#fff;
+  margin:0 auto;
+  position:relative;
+  font-family:Arial, Helvetica, sans-serif;
+  color:#000;
+  box-sizing:border-box;
+  padding:2mm 0.5mm;
+  display:flex;
+  flex-direction:column;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+  color-adjust:exact;
+  font-size:10.5pt;
+  line-height:1.3;
+  overflow:hidden;
+  --rp-scale:1;
+}
+.a4-report{ font-size:calc(10.5pt * var(--rp-scale)); }
+
+.rp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:4mm;margin-bottom:2mm;flex:0 0 auto;}
+.rp-top .logo-left{width:28mm;height:28mm;flex:none;display:flex;align-items:center;justify-content:center;}
+.rp-top .logo-left img{width:100%;height:100%;object-fit:contain;}
+.rp-top .title-block{flex:1;text-align:center;padding-top:2mm;}
+.rp-top .title-block h1{font-size:calc(17pt * var(--rp-scale));font-weight:800;letter-spacing:4px;margin:0;color:#000;}
+.rp-top .logo-right{width:24mm;height:28mm;flex:none;display:flex;align-items:center;justify-content:center;}
+.rp-top .logo-right img{width:100%;height:100%;object-fit:contain;}
+
+/* Info row — LEFT side stays normal; RIGHT side font enlarged for readability. */
+.rp-info-row{display:flex;justify-content:space-between;gap:6mm;margin-bottom:2mm;flex:0 0 auto;font-size:calc(10.5pt * var(--rp-scale));}
+.rp-info-left{flex:1;padding-left:2mm;}
+.rp-info-left .line{display:flex;align-items:baseline;gap:2mm;margin-bottom:1.2mm;}
+.rp-info-left .line .lbl{font-weight:700;min-width:38mm;}
+.rp-info-left .line .val{border-bottom:1px dotted #000;flex:1;padding-left:2mm;min-height:4.5mm;font-weight:600;}
+
+/* Right-hand block (Stage / Term / Date) — increased font size. */
+.rp-info-right{width:64mm;text-align:left;font-size:calc(12.5pt * var(--rp-scale));}
+.rp-info-right .line{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.4mm;}
+.rp-info-right .line .lbl{font-weight:700;font-size:calc(12.5pt * var(--rp-scale));letter-spacing:.3px;}
+.rp-info-right .line .val{border-bottom:1px dotted #000;min-width:26mm;text-align:left;padding-left:2mm;font-weight:700;font-size:calc(12.5pt * var(--rp-scale));}
+
+.rp-body{display:flex;gap:2mm;flex:1 1 auto;min-height:0;overflow:hidden;}
+.rp-vertical-panel{width:16mm;background:#00a99d;display:flex;align-items:center;justify-content:center;flex:none;}
+.rp-vertical-panel .vtext{transform:rotate(-90deg);white-space:nowrap;color:#fff;font-weight:800;font-size:calc(12pt * var(--rp-scale));letter-spacing:2px;}
+.rp-content{flex:1;display:flex;flex-direction:column;min-width:0;padding-bottom:0;overflow:hidden;}
+
+table.rp-subjects{width:100%;border-collapse:collapse;font-size:calc(10.5pt * var(--rp-scale));margin-bottom:1.5mm;}
+table.rp-subjects th{background:#00a99d;color:#fff;font-weight:800;font-size:calc(9.5pt * var(--rp-scale));text-transform:uppercase;padding:4px 3px;border:1px solid #000;text-align:center;line-height:1.15;}
+table.rp-subjects td{border:1px solid #000;padding:4px 5px;font-size:calc(10.5pt * var(--rp-scale));line-height:1.2;}
+table.rp-subjects td.sub-name{font-weight:600;}
+table.rp-subjects td.ctr{text-align:center;}
+table.rp-subjects td.grade{text-align:center;font-weight:700;}
+table.rp-subjects td.remark{text-align:center;}
+table.rp-subjects tr:nth-child(even) td{background:#f4fdfc;}
+
+.rp-remarks-title{background:#00a99d;color:#fff;font-weight:800;font-size:calc(10.5pt * var(--rp-scale));letter-spacing:2px;padding:3px 10px;margin-top:1.5mm;}
+.rp-remarks-body{
+  border:1px solid #000;
+  border-top:none;
+  min-height:16mm;
+  max-height:26mm;
+  overflow:hidden;
+  padding:2mm 3mm;
+  font-size:calc(10.5pt * var(--rp-scale) * var(--rp-remark-scale, 1));
+  line-height:1.25;
+  word-wrap:break-word;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap;
+}
+.rp-remarks-body .blank{color:transparent;}
+
+.rp-conduct-title{background:#00a99d;color:#fff;font-weight:800;font-size:calc(10.5pt * var(--rp-scale));letter-spacing:2px;padding:3px 10px;margin-top:1.5mm;}
+.rp-conduct-table{width:100%;border-collapse:collapse;font-size:calc(10.5pt * var(--rp-scale));border:1px solid #000;border-top:none;}
+.rp-conduct-table td{padding:2px 8px;border-bottom:1px dotted #666;line-height:1.2;}
+.rp-conduct-table tr:last-child td{border-bottom:none;}
+.rp-conduct-table td.lbl{width:36mm;font-weight:600;}
+
+.rp-bottom{display:flex;gap:3mm;margin-top:1.5mm;flex:0 0 auto;}
+.rp-attendance{width:38%;font-size:calc(10.5pt * var(--rp-scale));}
+.rp-attendance .line{display:flex;align-items:baseline;padding:1.5px 0;border-bottom:1px dotted #666;line-height:1.2;}
+.rp-attendance .line:last-child{border-bottom:none;}
+.rp-attendance .line .lbl{font-weight:600;flex:0 0 auto;min-width:30mm;}
+.rp-attendance .line .val{font-weight:700;flex:1;text-align:center;}
+.rp-grading{flex:1;font-size:calc(9.5pt * var(--rp-scale));}
+.rp-grading .gtitle{background:#00a99d;color:#fff;font-weight:800;text-align:center;padding:3px;letter-spacing:2px;font-size:calc(10.5pt * var(--rp-scale));line-height:1.15;}
+table.rp-grading-table{width:100%;border-collapse:collapse;font-size:calc(9pt * var(--rp-scale));}
+table.rp-grading-table td{border:1px solid #000;padding:1px 5px;text-align:center;color:#000;line-height:1.1;}
+table.rp-grading-table td.desc{text-align:left;font-weight:600;}
+table.rp-grading-table tr.hl-Astar td{background:#00b050 !important;color:#fff !important;font-weight:800;}
+table.rp-grading-table tr.hl-A td{background:#c6efce !important;color:#000 !important;font-weight:800;}
+table.rp-grading-table tr.hl-B td{background:#ffe600 !important;color:#000 !important;font-weight:800;}
+table.rp-grading-table tr.hl-C td{background:#fff5b1 !important;color:#000 !important;font-weight:800;}
+table.rp-grading-table tr.hl-D td{background:#ffa500 !important;color:#000 !important;font-weight:800;}
+table.rp-grading-table tr.hl-E td{background:#d2691e !important;color:#fff !important;font-weight:800;}
+table.rp-grading-table tr.hl-U td{background:#e60000 !important;color:#fff !important;font-weight:800;}
+
+.rp-signature{
+  margin:0;
+  padding:1mm 6mm 1mm 24mm;
+  display:flex;
+  justify-content:space-between;
+  gap:6mm;
+  flex:0 0 22mm;
+  height:22mm;
+  max-height:22mm;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+.rp-signature .sig-box{
+  width:80mm;
+  font-size:calc(9.5pt * var(--rp-scale));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  justify-content:flex-end;
+  height:100%;
+  overflow:hidden;
+}
+.rp-signature .sig-box .name{
+  font-weight:700;
+  color:#000;
+  font-size:calc(9.5pt * var(--rp-scale));
+  margin-bottom:0.1mm;
+  line-height:1.1;
+}
+.rp-signature .sig-box .sig-img{
+  height:8mm;
+  max-height:8mm;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  overflow:hidden;
+}
+.rp-signature .sig-box .sig-img img{
+  max-height:8mm;
+  max-width:52mm;
+  object-fit:contain;
+}
+.rp-signature .sig-box .line{
+  width:68mm;
+  border-top:1.1px solid #000;
+  margin-top:0.3mm;
+  margin-bottom:0.3mm;
+}
+.rp-signature .sig-box .role{
+  font-weight:700;
+  color:#000;
+  font-size:calc(9.5pt * var(--rp-scale));
+  margin-top:0.1mm;
+  line-height:1.1;
+}
+.rp-signature .sig-box .sign-label{
+  font-size:calc(8pt * var(--rp-scale));
+  color:#000;
+  margin-top:0.1mm;
+  line-height:1.1;
+}
+
+.rp-footer-logos{
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1mm 12mm 1mm 12mm;
+  height:16mm;
+  max-height:16mm;
+  min-height:16mm;
+  overflow:hidden;
+  flex:0 0 16mm;
+  box-sizing:border-box;
+  border-top:1px solid #e5e5e5;
+}
+.rp-footer-logos .flogo{
+  height:11mm;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+}
+.rp-footer-logos .flogo img{
+  height:11mm;
+  width:auto;
+  max-width:60mm;
+  object-fit:contain;
+}
+
+@media print{
+  @page{size:A4 portrait;margin:0;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
+  body *{visibility:hidden !important;}
+  #reportPrintArea,#reportPrintArea *{visibility:visible !important;}
+  #reportPrintArea{position:absolute;inset:0;margin:0;padding:0;background:#fff;}
+  .a4-report{box-shadow:none;width:210mm;height:297mm;max-height:297mm;page-break-after:avoid;page-break-inside:avoid;overflow:hidden;padding:2mm 0.5mm !important;}
+  .batch-page{page-break-after:always;page-break-inside:avoid;height:297mm;overflow:hidden;}
+  .batch-page:last-child{page-break-after:auto;}
+  .rp-vertical-panel{background:#00a99d !important;}
+  .rp-vertical-panel .vtext{color:#fff !important;}
+  table.rp-subjects th{background:#00a99d !important;color:#fff !important;}
+  table.rp-subjects tr:nth-child(even) td{background:#f4fdfc !important;}
+  .rp-remarks-title{background:#00a99d !important;color:#fff !important;}
+  .rp-conduct-title{background:#00a99d !important;color:#fff !important;}
+  .rp-grading .gtitle{background:#00a99d !important;color:#fff !important;}
+  .rp-remarks-body{max-height:26mm !important;overflow:hidden !important;}
+  .rp-body{overflow:hidden !important;}
+  .rp-signature{flex:0 0 22mm !important;height:22mm !important;max-height:22mm !important;overflow:hidden !important;}
+  .rp-footer-logos{flex:0 0 16mm !important;height:16mm !important;max-height:16mm !important;min-height:16mm !important;}
+  .sidebar,.topbar,.toast-wrap,.modal-back,.modal,#installBanner{display:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="loginView">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo" id="loginLogo"><span>TS</span></div>
+      <h1 id="loginSchoolName">THE TANGANYIKA SCHOOLS</h1>
+      <div class="sub">Sky Wings Academy</div>
+      <div class="desc">Academic Management System — Primary Wing (Reception – Year 6) and Secondary Wing (Year 7 – Year 13).</div>
+      <ul>
+        <li>Homeroom teachers: Remarks &amp; Character</li>
+        <li>Subject teachers: Marks only</li>
+        <li>Batch print all reports for a class</li>
+        <li>Installable app — phone, tablet, laptop</li>
+      </ul>
+    </div>
+    <div class="login-form">
+      <h2>Welcome back</h2>
+      <p class="lead">Sign in to continue to your dashboard.</p>
+      <form id="loginForm" autocomplete="on">
+        <div class="field"><label for="loginUser">Username</label>
+          <div class="input-wrap"><input id="loginUser" type="text" placeholder="Enter your username" required /></div>
+        </div>
+        <div class="field"><label for="loginPass">Password</label>
+          <div class="input-wrap"><input id="loginPass" type="password" placeholder="Enter your password" required />
+            <button type="button" class="toggle-eye" id="togglePass">👁</button>
+          </div>
+        </div>
+        <div class="login-actions">
+          <label class="check"><input type="checkbox" id="rememberMe" /> Remember this device</label>
+          <span class="small"><span class="status-dot on" id="netDot"></span><span id="netText">Online</span></span>
+        </div>
+        <button type="submit" class="btn primary block" id="loginBtn">LOGIN</button>
+      </form>
+      <div id="loginMsg" class="mt2"></div>
+      <div class="login-foot">Developed by <b>Rasul A. Mngazija</b></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo" id="sideLogo"><span>TS</span></div>
+      <div class="txt">
+        <strong id="sideSchool">Tanganyika – Sky Wings</strong>
+        <small id="sideRole">Academic System</small>
+        <div id="sideWing"></div>
+      </div>
+    </div>
+    <nav class="nav" id="navMenu"></nav>
+    <div class="foot"><b>Developed by Rasul A. Mngazija</b><br/>© <span id="yr"></span> Academic Management System</div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div class="title" id="topTitle">Dashboard<small id="topSub">Overview</small></div>
+      <div class="spacer"></div>
+      <div class="term-chip" id="termChip" onclick="openTermPicker()">📅 <span id="termChipLabel">Term 2</span></div>
+      <div class="searchbox"><input id="globalSearch" placeholder="Search student..." /></div>
+      <span class="conn on" id="connBadge">ONLINE</span>
+      <button class="btn gold sm hidden" id="installBtn">⬇ Install App</button>
+      <div class="userchip">
+        <div class="av" id="userAv">SA</div>
+        <div class="meta"><strong id="userName">Super Admin</strong><small id="userRole">Super Admin</small></div>
+        <button class="btn ghost sm" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <div class="mh"><h3 id="modalTitle">Modal</h3><button class="btn ghost sm" id="modalClose">✕</button></div>
+    <div class="mb" id="modalBody"></div>
+    <div class="mf" id="modalFoot"></div>
+  </div>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+<div id="installBanner" class="hidden">
+  <div class="ib-text"><strong>Install Tanganyika – Sky Wings Academy</strong><div class="small">Add the app to your home screen for offline use.</div></div>
+  <button class="btn gold sm" id="installBannerBtn">Install</button>
+  <button class="btn ghost sm" id="installDismiss">Later</button>
+</div>
+<!-- reportPrintArea is HIDDEN by default and only shown when a report is requested -->
+<div id="reportPrintArea" class="hidden"></div>
+
+<script>
+/* ================================================================
+   Tanganyika / Sky Wings Academy — Academic Management System v14.5
+   Primary Wing (Reception–Y6): HOS Ms. Neha
+   Secondary Wing (Y7–Y13): HOS Rasul Mngazija
+   Developed by Rasul A. Mngazija
+
+   v14.5 CHANGES:
+   1. Reports only show subjects assigned to a teacher for that class.
+   2. Excel import accepts multiple names (compound middle names) safely.
+   3. Homeroom comment box auto-expands.
+   4. Signature block reserved space (22mm) — never overlapped by footer.
+   5. Auto font-scaling keeps report content inside the A4 page.
+   6. Remarks box taller (26mm) + auto-shrinks font so long comments fit.
+      HTML/script tags in the remark are stripped.
+   7. Footer logos spread apart: logo 1 far left, logo 2 centre, logo 3 far right.
+   8. Conduct table labels now have colons: "Cleanliness:" etc.
+   9. Attendance labels now have colons, values centred.
+  10. Homeroom comment textarea has spellcheck (English) enabled.
+  11. Top-right info row (Stage / Term / Date) font enlarged for readability.
+  12. "Year:" label replaced with "Stage:" and the value shows the
+      student's class name (e.g. Year 5, Reception, Year 9) instead of
+      the academic year (2026).
+   ================================================================ */
+
+const SCHOOL_CONFIG = {
+  schoolName:  "THE TANGANYIKA SCHOOLS",
+  academyName: "SKY WINGS ACADEMY",
+  schoolLogo:  "assets/logo.png",
+  secondaryLogo: "assets/secondary-logo.png",
+  wings: {
+    primary:   { code:"primary",   label:"Primary Wing",   range:"Reception – Year 6",  headOfSchool:"Ms. Neha",         signature:"assets/signature_neha.png" },
+    secondary: { code:"secondary", label:"Secondary Wing", range:"Year 7 – Year 13",    headOfSchool:"Rasul Mngazija",   signature:"assets/signature_rasul.png" }
+  },
+  footerLogos: [
+    { src:"assets/footer1.png" }, { src:"assets/footer2.png" }, { src:"assets/footer3.png" }
+  ]
+};
+
+const APP = {
+  version:"14.5.0",
+  grading:[
+    {min:90,max:100,grade:"A*",desc:"OUTSTANDING"},
+    {min:80,max:89,grade:"A", desc:"EXCELLENT"},
+    {min:70,max:79,grade:"B", desc:"HIGH"},
+    {min:60,max:69,grade:"C", desc:"GOOD"},
+    {min:50,max:59,grade:"D", desc:"SATISFACTORY"},
+    {min:40,max:49,grade:"E", desc:"ASPIRING"},
+    {min:0, max:39,grade:"U", desc:"BASIC"}
+  ],
+  defaultAssessment:{ midterm:30, endterm:70 },
+  primaryClasses: ["Reception","Year 1","Year 2","Year 3","Year 4","Year 5","Year 6"],
+  secondaryClasses: ["Year 7","Year 8","Year 9","Year 10","Year 11","Year 12","Year 13"],
+  defaultSubjects: ["Mathematics","Global English","Science","D.Literacy","G/Perspectives","Music","Art and Design"],
+  nextClass(name){
+    const base = (name||"").replace(/\s+[A-Z]$/,"").trim();
+    const all=[...this.primaryClasses, ...this.secondaryClasses];
+    const i = all.indexOf(base);
+    if(i===-1) return null;
+    if(i===all.length-1) return "GRADUATED";
+    return all[i+1];
+  },
+  baseClassName(name){ return (name||"").replace(/\s+[A-Z]$/,"").trim(); }
+};
+
+const DB = {
+  key:"tsa_gradebook_v14",
+  data:null,
+  load(){
+    try{ const raw=localStorage.getItem(this.key); if(raw) this.data=JSON.parse(raw); }catch(e){ this.data=null; }
+    if(!this.data) this.seed();
+  },
+  save(){ try{ localStorage.setItem(this.key, JSON.stringify(this.data)); }catch(e){} },
+  seed(){
+    const schoolId="school_tanganyika";
+    const allClasses=[...APP.primaryClasses, ...APP.secondaryClasses];
+    this.data = {
+      meta:{ created:new Date().toISOString(), version:APP.version },
+      schools:[{ id:schoolId, code:"TSA", name:SCHOOL_CONFIG.schoolName+" – "+SCHOOL_CONFIG.academyName, logo:SCHOOL_CONFIG.schoolLogo, secondaryLogo:SCHOOL_CONFIG.secondaryLogo, active:true }],
+      users:[
+        { id:"u_super", schoolId:null, name:"Super Admin", username:"SuperAdmin", password:"Mngazija2017", role:"superadmin", active:true, muted:false, email:"", signature:"" },
+        { id:"u_head_pri", schoolId, name:"Ms. Neha", username:"headprimary", password:"head123", role:"headteacher", wing:"primary", active:true, muted:false, email:"", signature:SCHOOL_CONFIG.wings.primary.signature },
+        { id:"u_head_sec", schoolId, name:"Rasul Mngazija", username:"headsecondary", password:"head123", role:"headteacher", wing:"secondary", active:true, muted:false, email:"", signature:SCHOOL_CONFIG.wings.secondary.signature },
+        { id:"u_t1", schoolId, name:"Ms. Christina", username:"teacher1", password:"teacher1", role:"teacher", wing:"primary", active:true, muted:false, email:"", signature:"" },
+        { id:"u_t2", schoolId, name:"Mr. Joseph", username:"teacher2", password:"teacher2", role:"teacher", wing:"primary", active:true, muted:false, email:"", signature:"" },
+        { id:"u_t3", schoolId, name:"Ms. Grace", username:"teacher3", password:"teacher3", role:"teacher", wing:"secondary", active:true, muted:false, email:"", signature:"" }
+      ],
+      academicYears:[
+        { id:"ay2026", schoolId, name:"2026", current:true, open:true },
+        { id:"ay2027", schoolId, name:"2027", current:false, open:false }
+      ],
+      terms:[
+        { id:"t1", schoolId, yearId:"ay2026", name:"Term 1", current:false, open:true },
+        { id:"t2", schoolId, yearId:"ay2026", name:"Term 2", current:true,  open:true },
+        { id:"t3", schoolId, yearId:"ay2026", name:"Term 3", current:false, open:true }
+      ],
+      classes: allClasses.map((c,i)=>({ id:"c_"+i, schoolId, name:c, base:c, stream:"", wing: APP.primaryClasses.includes(c)?"primary":"secondary", section:"" })),
+      subjects: APP.defaultSubjects.map((s,i)=>({ id:"s_"+i, schoolId, name:s, order:i, active:true })),
+      teacherAssignments:[
+        { id:"ta1", schoolId, teacherId:"u_t1", classId:"c_2", subjectId:"s_0", role:"subject", wing:"primary" },
+        { id:"ta2", schoolId, teacherId:"u_t1", classId:"c_2", subjectId:"s_2", role:"subject", wing:"primary" },
+        { id:"ta3", schoolId, teacherId:"u_t2", classId:"c_2", subjectId:"s_1", role:"subject", wing:"primary" },
+        { id:"ta4", schoolId, teacherId:"u_t2", classId:"c_2", subjectId:"", role:"homeroom", wing:"primary" }
+      ],
+      students:[
+        { id:"SW001", admission:"ADM001", schoolId, firstName:"Advent-Angello", middleName:"Aldoph", lastName:"Mselle", name:"Advent-Angello Aldoph Mselle", gender:"M", dob:"2018-04-12", classId:"c_2", parentName:"Adeline Augustino", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW002", admission:"ADM002", schoolId, firstName:"Bracken", middleName:"Baraka", lastName:"Mollel", name:"Bracken Baraka Mollel", gender:"M", dob:"2018-06-02", classId:"c_2", parentName:"Faith Godfrey", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW003", admission:"ADM003", schoolId, firstName:"Brianna", middleName:"Muchunguzi", lastName:"Kabonaki", name:"Brianna Muchunguzi Kabonaki", gender:"F", dob:"2018-01-19", classId:"c_2", parentName:"Elibariki Muganyizi", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW004", admission:"ADM004", schoolId, firstName:"Constantin", middleName:"David", lastName:"Becheru", name:"Constantin David Becheru", gender:"M", dob:"2018-09-30", classId:"c_2", parentName:"Elizabeth David", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW005", admission:"ADM005", schoolId, firstName:"Efraubenhim", middleName:"Josephat", lastName:"Mrema", name:"Efraubenhim Josephat Mrema", gender:"M", dob:"2018-03-14", classId:"c_2", parentName:"Irene Emanuel", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW006", admission:"ADM006", schoolId, firstName:"Elisiana", middleName:"Raymond", lastName:"Shoo", name:"Elisiana Raymond Shoo", gender:"F", dob:"2018-11-08", classId:"c_2", parentName:"Ellen Godfrey", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW007", admission:"ADM007", schoolId, firstName:"Elsa", middleName:"O'brien", lastName:"Mlay", name:"Elsa O'brien Mlay", gender:"F", dob:"2018-07-21", classId:"c_2", parentName:"Rehema Maginga", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW008", admission:"ADM008", schoolId, firstName:"Guevara", middleName:"Peter", lastName:"Banjoko", name:"Guevara Peter Banjoko", gender:"M", dob:"2018-02-27", classId:"c_2", parentName:"", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW009", admission:"ADM009", schoolId, firstName:"Jason", middleName:"Jones", lastName:"Temba", name:"Jason Jones Temba", gender:"M", dob:"2018-05-16", classId:"c_2", parentName:"Grace Mapesa", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false },
+        { id:"SW010", admission:"ADM010", schoolId, firstName:"Jonathan", middleName:"Jimmy", lastName:"Kasale", name:"Jonathan Jimmy Kasale", gender:"M", dob:"2018-10-03", classId:"c_2", parentName:"", parentEmail:"", parentPhone:"", archived:false, awaitingApproval:false, graduated:false }
+      ],
+      marks:[], reportInfo:[], interventions:[], auditLogs:[], emailLogs:[], conduct:[],
+      settings:{
+        [schoolId]:{
+          assessment:{ midterm:30, endterm:70 },
+          grading: APP.grading,
+          homeroomTeachers:{},
+          wingTerms:{ primary:{ currentTermId:"t2" }, secondary:{ currentTermId:"t2" } },
+          classTerms:{}
+        }
+      }
+    };
+    const sample=[
+      ["SW001","s_0",26,62],["SW002","s_0",22,55],["SW003","s_0",28,65],["SW004","s_0",18,42],["SW005","s_0",24,58],
+      ["SW006","s_0",15,35],["SW007","s_0",27,63],["SW008","s_0",20,48],["SW009","s_0",29,68],["SW010","s_0",17,39],
+      ["SW001","s_1",27,64],["SW002","s_1",21,52],["SW003","s_1",29,67],["SW004","s_1",19,44],["SW005","s_1",23,56],
+      ["SW006","s_1",16,38],["SW007","s_1",26,61],["SW008","s_1",22,50],["SW009","s_1",28,66],["SW010","s_1",18,41],
+      ["SW001","s_2",25,60],["SW002","s_2",20,47],["SW003","s_2",28,66],["SW004","s_2",17,40],["SW005","s_2",22,54],
+      ["SW006","s_2",14,34],["SW007","s_2",27,64],["SW008","s_2",21,49],["SW009","s_2",29,69],["SW010","s_2",19,43]
+    ];
+    sample.forEach(([sid,subj,mid,end],i)=>{
+      this.data.marks.push({ id:"m"+(i+1), schoolId, studentId:sid, subjectId:subj, yearId:"ay2026", termId:"t2", midterm:mid, endterm:end, locked:false, submitted:true, teacherId:"u_t1" });
+    });
+    this.data.reportInfo.push({ id:"ri1", schoolId, studentId:"SW010", yearId:"ay2026", termId:"t2", homeroomComment:"Jonathan has demonstrated good progress during the term.", subjectComments:{} });
+    this.data.conduct.push({ id:"cd1", schoolId, studentId:"SW010", termId:"t2", yearId:"ay2026", daysAbsent:2, cleanliness:"Very clean.", attentiveness:"Very attentive.", friendliness:"Very friendly.", respectful:"Very respectful.", leadership:"Shows leadership." });
+    this.save();
+  }
+};
+
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const uid = (p="id")=>p+"_"+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const esc = (s)=>String(s==null?"":s).replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+const money = n=>(n==null||isNaN(n))?"—":Number(n).toFixed(1);
+const todayISO = ()=>new Date().toISOString().slice(0,10);
+const initials = (n)=>(n||"").split(" ").filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"?";
+const numOrBlank = (v)=>(v==null||v==="")?"":v;
+function gradeFor(score, grading=APP.grading){
+  if(score==null||isNaN(score)) return {grade:"",desc:""};
+  const g = grading.find(x=>score>=x.min && score<=x.max);
+  return g?{grade:g.grade,desc:g.desc}:{grade:"",desc:""};
+}
+function gradeClass(g){ if(!g) return ""; return g==="A*"?"g-Astar":g==="A"?"g-A":g==="B"?"g-B":g==="C"?"g-C":g==="D"?"g-D":g==="E"?"g-E":"g-U"; }
+function finalMark(m, assessment){
+  if(!m||(m.midterm==null&&m.endterm==null)) return null;
+  const a = assessment||APP.defaultAssessment;
+  const tw = (a.midterm||0)+(a.endterm||0) || 100;
+  const raw = (m.midterm||0)+(m.endterm||0);
+  if(tw===100) return Math.round(raw*10)/10;
+  return Math.round((((m.midterm||0)*(a.midterm/tw))+((m.endterm||0)*(a.endterm/tw)))*10)/10;
+}
+function isStruggling(score){ if(score==null||isNaN(score)) return false; return ["D","E","U"].includes(gradeFor(score).grade); }
+
+/* Strips HTML tags from a string (used for remarks — some teachers paste HTML). */
+function stripHtml(s){
+  if(s==null) return "";
+  return String(s).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+const session = {
+  user:null, school:null, wing:null, viewTermId:null, annualMode:false,
+  load(){ try{ const raw=sessionStorage.getItem("tsa_v14")||localStorage.getItem("tsa_v14");
+    if(raw){ const s=JSON.parse(raw); this.user=s.user; this.school=s.school; this.wing=s.wing; this.viewTermId=s.viewTermId; this.annualMode=s.annualMode||false; } }catch(e){} },
+  save(remember){ const p=JSON.stringify({user:this.user,school:this.school,wing:this.wing,viewTermId:this.viewTermId,annualMode:this.annualMode});
+    sessionStorage.setItem("tsa_v14",p); if(remember) localStorage.setItem("tsa_v14",p); },
+  clear(){ sessionStorage.removeItem("tsa_v14"); localStorage.removeItem("tsa_v14"); this.user=null; this.school=null; this.wing=null; this.viewTermId=null; this.annualMode=false; }
+};
+
+function toast(msg,type="",ms=3500){ const w=$("#toastWrap"); const el=document.createElement("div");
+  el.className="toast "+type; el.textContent=msg; w.appendChild(el);
+  setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateX(30px)"; setTimeout(()=>el.remove(),250); },ms); }
+function notify(m,t){ toast(m,t); }
+function openModal(title,body,foot){ $("#modalTitle").textContent=title; $("#modalBody").innerHTML=body;
+  $("#modalFoot").innerHTML=foot||`<button class="btn ghost" onclick="closeModal()">Close</button>`; $("#modalBack").classList.add("on"); }
+function closeModal(){ $("#modalBack").classList.remove("on"); }
+window.closeModal=closeModal;
+$("#modalClose").addEventListener("click",closeModal);
+$("#modalBack").addEventListener("click",e=>{ if(e.target.id==="modalBack") closeModal(); });
+
+function clearReportArea(){
+  const area = $("#reportPrintArea");
+  if(area){
+    area.innerHTML = "";
+    area.classList.add("hidden");
+  }
+}
+
+function audit(action,detail){ if(!DB.data) return;
+  DB.data.auditLogs.unshift({ id:uid("log"), ts:new Date().toISOString(), schoolId:session.school?.id||null, userId:session.user?.id||null, user:session.user?.name||"System", action, detail });
+  DB.data.auditLogs=DB.data.auditLogs.slice(0,1000); DB.save(); }
+
+function currentSchool(){ return session.school||DB.data.schools[0]; }
+function schoolStudents(id){ return DB.data.students.filter(s=>s.schoolId===id && !s.archived); }
+function schoolClasses(id,wing){ let l=DB.data.classes.filter(c=>c.schoolId===id); if(wing) l=l.filter(c=>c.wing===wing); return l; }
+function schoolSubjects(id){ return DB.data.subjects.filter(s=>s.schoolId===id && s.active!==false).sort((a,b)=>a.order-b.order); }
+function allSubjects(id){ return DB.data.subjects.filter(s=>s.schoolId===id).sort((a,b)=>a.order-b.order); }
+function className(id){ const c=DB.data.classes.find(x=>x.id===id); return c?c.name:"—"; }
+function classWing(classId){ const c=DB.data.classes.find(x=>x.id===classId); return c?c.wing:null; }
+function subjectName(id){ const s=DB.data.subjects.find(x=>x.id===id); return s?s.name:"—"; }
+function studentName(id){ const s=DB.data.students.find(x=>x.id===id); return s?s.name:"—"; }
+function yearName(id){ const y=DB.data.academicYears.find(x=>x.id===id); return y?y.name:"—"; }
+function termName(id){ const t=DB.data.terms.find(x=>x.id===id); return t?t.name:"—"; }
+function currentYear(){ return DB.data.academicYears.find(y=>y.current)||DB.data.academicYears[0]; }
+
+function subjectsForClass(schoolId, classId){
+  const assignedSubjectIds = new Set(
+    DB.data.teacherAssignments
+      .filter(a => a.classId === classId && a.role === "subject" && a.subjectId)
+      .map(a => a.subjectId)
+  );
+  if(assignedSubjectIds.size === 0){
+    return schoolSubjects(schoolId);
+  }
+  return allSubjects(schoolId)
+    .filter(s => assignedSubjectIds.has(s.id) && s.active !== false);
+}
+
+function effectiveTermId(wing,classId){
+  if(session.viewTermId) return session.viewTermId;
+  const s=DB.data.settings[currentSchool().id]||{};
+  if(classId && s.classTerms && s.classTerms[classId]) return s.classTerms[classId];
+  if(wing && s.wingTerms && s.wingTerms[wing] && s.wingTerms[wing].currentTermId) return s.wingTerms[wing].currentTermId;
+  return (DB.data.terms.find(t=>t.current)||DB.data.terms[0]).id;
+}
+function currentTerm(){ return DB.data.terms.find(t=>t.id===effectiveTermId(session.wing,null))||DB.data.terms[0]; }
+function currentTermForClass(classId){ return DB.data.terms.find(t=>t.id===effectiveTermId(classWing(classId),classId))||DB.data.terms[0]; }
+
+function getMark(schoolId,studentId,subjectId,yearId,termId){
+  return DB.data.marks.find(m=>m.schoolId===schoolId&&m.studentId===studentId&&m.subjectId===subjectId&&m.yearId===yearId&&m.termId===termId);
+}
+function upsertMark(schoolId,studentId,subjectId,yearId,termId,midterm,endterm,teacherId){
+  let m=getMark(schoolId,studentId,subjectId,yearId,termId);
+  if(m){ m.midterm=midterm; m.endterm=endterm; m.updated=new Date().toISOString(); }
+  else{ m={id:uid("m"),schoolId,studentId,subjectId,yearId,termId,midterm,endterm,locked:false,submitted:false,teacherId}; DB.data.marks.push(m); }
+  DB.save(); return m;
+}
+function teacherAssignedClassIds(userId){ return [...new Set(DB.data.teacherAssignments.filter(a=>a.teacherId===userId).map(a=>a.classId))]; }
+function isHomeroomOfClass(userId,classId){ return userId && homeroomTeacherId(classId)===userId; }
+function teacherWings(userId){ return [...new Set(teacherAssignedClassIds(userId).map(cid=>classWing(cid)).filter(Boolean))]; }
+function effectiveWing(){
+  if(session.user?.role==="superadmin") return session.wing||"primary";
+  if(session.user?.role==="headteacher") return session.user.wing;
+  if(session.user?.role==="teacher"){
+    if(session.wing) return session.wing;
+    const ws=teacherWings(session.user.id);
+    return ws[0]||session.user.wing||"primary";
+  }
+  return "primary";
+}
+function classesForCurrentUser(){
+  const school=currentSchool();
+  if(session.user?.role==="superadmin") return schoolClasses(school.id);
+  if(session.user?.role==="headteacher") return schoolClasses(school.id, session.user.wing);
+  if(session.user?.role==="teacher"){
+    const cids=teacherAssignedClassIds(session.user.id);
+    return schoolClasses(school.id).filter(c=>cids.includes(c.id));
+  }
+  return schoolClasses(school.id);
+}
+function studentsForCurrentUser(){
+  const school=currentSchool();
+  if(session.user?.role==="superadmin") return schoolStudents(school.id);
+  const classes=classesForCurrentUser().map(c=>c.id);
+  return schoolStudents(school.id).filter(s=>classes.includes(s.classId));
+}
+function homeroomTeacherId(classId){
+  const s=DB.data.settings[currentSchool().id]||{};
+  if(s.homeroomTeachers && s.homeroomTeachers[classId]) return s.homeroomTeachers[classId];
+  const a=DB.data.teacherAssignments.find(x=>x.classId===classId && x.role==="homeroom"); return a?a.teacherId:null;
+}
+function homeroomTeacher(cid){ const tid=homeroomTeacherId(cid); return tid?DB.data.users.find(u=>u.id===tid):null; }
+function setHomeroomTeacher(classId,teacherId){
+  const s=DB.data.settings[currentSchool().id];
+  if(!s.homeroomTeachers) s.homeroomTeachers={};
+  s.homeroomTeachers[classId]=teacherId;
+  DB.data.teacherAssignments=DB.data.teacherAssignments.filter(a=>!(a.classId===classId && a.role==="homeroom"));
+  if(teacherId) DB.data.teacherAssignments.push({ id:uid("ta"), schoolId:currentSchool().id, teacherId, classId, subjectId:"", role:"homeroom", wing:classWing(classId) });
+  DB.save();
+}
+function homeroomClassIds(userId){ return DB.data.teacherAssignments.filter(a=>a.teacherId===userId && a.role==="homeroom").map(a=>a.classId); }
+function teacherTeaches(userId,classId,subjectId){ return DB.data.teacherAssignments.some(a=>a.teacherId===userId && a.classId===classId && a.subjectId===subjectId && a.role==="subject"); }
+function assessmentFor(wing){
+  const s=DB.data.settings[currentSchool().id]||{};
+  if(s.wingAssessment && s.wingAssessment[wing]) return s.wingAssessment[wing];
+  return s.assessment || APP.defaultAssessment;
+}
+
+/* EXCEL */
+function xlsxReady(){ return typeof window.XLSX !== "undefined"; }
+function downloadXlsx(filename, sheets){
+  if(!xlsxReady()){ notify("Excel library not loaded. Check internet.","bad"); return; }
+  const wb = XLSX.utils.book_new();
+  Object.keys(sheets).forEach(sheetName=>{
+    const ws = XLSX.utils.aoa_to_sheet(sheets[sheetName]);
+    const colWidths = [];
+    sheets[sheetName].forEach(row=> row.forEach((cell, i)=>{
+      const len = String(cell==null?"":cell).length + 2;
+      colWidths[i] = Math.max(colWidths[i]||10, len);
+    }));
+    ws["!cols"] = colWidths.map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  });
+  XLSX.writeFile(wb, filename);
+}
+function readXlsx(file, callback){
+  if(!xlsxReady()){ notify("Excel library not loaded.","bad"); return; }
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const wb = XLSX.read(e.target.result, {type:"array"});
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:""});
+      callback(rows);
+    }catch(err){ notify("Invalid Excel file: "+err.message,"bad"); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+function downloadStudentTemplate(){
+  downloadXlsx("students_import_template.xlsx", { "Students": [
+    ["Student ID","Admission Number","First Name","Middle Name","Last Name","Gender","Date of Birth","Class","Parent Name","Parent Email","Parent Phone"],
+    ["SW011","ADM011","Jane","Doe","Smith","F","2018-01-15","Year 2","Mary Doe","mary@example.com","700000000"],
+    ["SW012","ADM012","John","","Doe","M","2018-03-20","Year 2A","Peter Doe","peter@example.com","700000001"]
+  ]});
+  notify("Excel template downloaded.","ok");
+}
+window.downloadStudentTemplate = downloadStudentTemplate;
+function downloadStudentsList(){
+  const school=currentSchool();
+  const headers = ["Student ID","Admission Number","First Name","Middle Name","Last Name","Gender","Date of Birth","Class","Wing","Parent Name","Parent Email","Parent Phone","Status"];
+  const rows = [headers];
+  schoolStudents(school.id).forEach(s=>{
+    rows.push([s.id, s.admission||"", s.firstName||"", s.middleName||"", s.lastName||"", s.gender||"", s.dob||"", className(s.classId), classWing(s.classId)||"", s.parentName||"", s.parentEmail||"", s.parentPhone||"", s.graduated?"Graduated":s.awaitingApproval?"Awaiting approval":"Active"]);
+  });
+  downloadXlsx(`students_list_${todayISO()}.xlsx`, { "Students": rows });
+  notify("Student list exported.","ok");
+}
+window.downloadStudentsList = downloadStudentsList;
+function triggerStudentImport(){
+  const el = document.createElement("input"); el.type = "file"; el.accept = ".xlsx,.xls";
+  el.onchange = ()=> importStudents(el.files[0]); el.click();
+}
+window.triggerStudentImport = triggerStudentImport;
+
+function importStudents(file){
+  if(!file) return;
+  readXlsx(file, (rows)=>{
+    if(!rows.length){ notify("Empty file.","bad"); return; }
+    const headers = rows[0].map(h=>String(h||"").toLowerCase().trim());
+    const required = ["student id","first name","last name","class"];
+    const missing = required.filter(r=> !headers.includes(r));
+    if(missing.length){ notify("Missing columns: "+missing.join(", "),"bad"); return; }
+    const school=currentSchool();
+    const get = (row, name)=>{ const i = headers.indexOf(name); return i>=0 ? String(row[i]||"").trim() : ""; };
+    let added=0, skipped=0; const errors=[];
+    rows.slice(1).forEach((row, idx)=>{
+      const sid = get(row,"student id"), first = get(row,"first name"), last = get(row,"last name"), cls = get(row,"class");
+      if(!sid || !first || !last || !cls){ skipped++; errors.push(`Row ${idx+2}: missing required field`); return; }
+      if(DB.data.students.some(s=>s.id===sid)){ skipped++; errors.push(`Row ${idx+2}: Student ID ${sid} exists`); return; }
+      const classObj = DB.data.classes.find(c=>c.schoolId===school.id && c.name.toLowerCase()===cls.toLowerCase());
+      if(!classObj){ skipped++; errors.push(`Row ${idx+2}: Class "${cls}" not found`); return; }
+      const mid = get(row,"middle name");
+      const fullNameCol = get(row,"full name");
+      const displayName = fullNameCol || [first, mid, last].filter(Boolean).join(" ");
+
+      DB.data.students.push({ id: sid, admission: get(row,"admission number"), schoolId: school.id,
+        firstName: first, middleName: mid, lastName: last, name: displayName,
+        gender: get(row,"gender").toUpperCase().slice(0,1), dob: get(row,"date of birth"), classId: classObj.id,
+        parentName: get(row,"parent name"), parentEmail: get(row,"parent email"), parentPhone: get(row,"parent phone"),
+        archived:false, awaitingApproval:false, graduated:false });
+      added++;
+    });
+    DB.save(); audit("Imported students", `${added} added, ${skipped} skipped`);
+    if(errors.length){
+      openModal("Import Report", `<div class="alert ${added?"ok":"warn"}"><b>${added}</b> student(s) added. <b>${skipped}</b> skipped.</div>
+        <div style="max-height:300px;overflow:auto;font-size:12.5px">${errors.map(e=>`<div style="padding:4px 0;border-bottom:1px solid #eee">${esc(e)}</div>`).join("")}</div>`,
+        `<button class="btn primary" onclick="closeModal();renderStudents()">Done</button>`);
+    } else { notify(`Imported ${added} student(s).`,"ok"); renderStudents(); }
+  });
+}
+window.importStudents = importStudents;
+
+function downloadTeacherTemplate(){
+  downloadXlsx("teachers_import_template.xlsx", { "Teachers": [
+    ["Username","Full Name","Password","Role","Home Wing","Email","Active"],
+    ["teacher4","John Doe","welcome123","teacher","primary","john@example.com","yes"],
+    ["teacher5","Jane Smith","welcome123","teacher","secondary","jane@example.com","yes"]
+  ]});
+  notify("Excel template downloaded.","ok");
+}
+window.downloadTeacherTemplate = downloadTeacherTemplate;
+function downloadTeachersList(){
+  const school=currentSchool();
+  const rows = [["Username","Full Name","Role","Home Wing","Email","Active","Muted","Signature?"]];
+  DB.data.users.filter(u=>u.schoolId===school.id && (u.role==="teacher"||u.role==="headteacher")).forEach(t=>{
+    rows.push([t.username, t.name, t.role, t.wing||"", t.email||"", t.active!==false?"yes":"no", t.muted?"yes":"no", t.signature?"yes":"no"]);
+  });
+  downloadXlsx(`teachers_list_${todayISO()}.xlsx`, { "Teachers": rows });
+  notify("Teacher list exported.","ok");
+}
+window.downloadTeachersList = downloadTeachersList;
+function triggerTeacherImport(){
+  const el = document.createElement("input"); el.type = "file"; el.accept = ".xlsx,.xls";
+  el.onchange = ()=> importTeachers(el.files[0]); el.click();
+}
+window.triggerTeacherImport = triggerTeacherImport;
+function importTeachers(file){
+  if(!file) return;
+  readXlsx(file, (rows)=>{
+    if(!rows.length){ notify("Empty file.","bad"); return; }
+    const headers = rows[0].map(h=>String(h||"").toLowerCase().trim());
+    const required = ["username","full name","password","role","home wing"];
+    const missing = required.filter(r=> !headers.includes(r));
+    if(missing.length){ notify("Missing columns: "+missing.join(", "),"bad"); return; }
+    const school=currentSchool();
+    const get = (row, name)=>{ const i = headers.indexOf(name); return i>=0 ? String(row[i]||"").trim() : ""; };
+    let added=0, skipped=0; const errors=[];
+    rows.slice(1).forEach((row, idx)=>{
+      const username = get(row,"username").toLowerCase();
+      const name = get(row,"full name"), password = get(row,"password");
+      const role = (get(row,"role")||"teacher").toLowerCase();
+      const wing = (get(row,"home wing")||"primary").toLowerCase();
+      if(!username || !name || !password){ skipped++; errors.push(`Row ${idx+2}: missing field`); return; }
+      if(!["teacher","headteacher"].includes(role)){ skipped++; errors.push(`Row ${idx+2}: role invalid`); return; }
+      if(!["primary","secondary"].includes(wing)){ skipped++; errors.push(`Row ${idx+2}: wing invalid`); return; }
+      if(DB.data.users.some(u=>u.username.toLowerCase()===username)){ skipped++; errors.push(`Row ${idx+2}: username exists`); return; }
+      DB.data.users.push({ id: uid("u"), schoolId: school.id, name, username, password, role, wing,
+        email: get(row,"email"), active: (get(row,"active")||"yes").toLowerCase()!=="no", muted:false, signature:"" });
+      added++;
+    });
+    DB.save(); audit("Imported teachers", `${added} added, ${skipped} skipped`);
+    if(errors.length){
+      openModal("Import Report", `<div class="alert ${added?"ok":"warn"}"><b>${added}</b> teacher(s) added. <b>${skipped}</b> skipped.</div>
+        <div style="max-height:300px;overflow:auto;font-size:12.5px">${errors.map(e=>`<div style="padding:4px 0;border-bottom:1px solid #eee">${esc(e)}</div>`).join("")}</div>`,
+        `<button class="btn primary" onclick="closeModal();renderTeachers()">Done</button>`);
+    } else { notify(`Imported ${added} teacher(s).`,"ok"); renderTeachers(); }
+  });
+}
+window.importTeachers = importTeachers;
+
+function openTermPicker(){
+  const current = session.viewTermId, isAnnual = session.annualMode;
+  const terms = DB.data.terms.filter(t=>t.schoolId===currentSchool().id);
+  openModal("Choose Term to Work On", `
+    <div class="alert info">Select the term you want to view/manage.</div>
+    <div class="term-picker">
+      ${terms.map(t=>`<div class="term-card ${current===t.id && !isAnnual?"selected":""}" onclick="pickTerm('${t.id}')">
+        <div class="icon">📅</div><h4>${esc(t.name)}</h4><p>Marks for ${esc(t.name)}</p></div>`).join("")}
+      <div class="term-card ${isAnnual?"selected":""}" onclick="pickTerm('annual')">
+        <div class="icon">📊</div><h4>Annual</h4><p>Term 1 + 2 + 3 overview</p></div>
+    </div>`, `<button class="btn ghost" onclick="closeModal()">Cancel</button>`);
+}
+function pickTerm(id){
+  if(id==="annual"){ session.annualMode=true; session.viewTermId=null; notify("Viewing Annual mode.","ok"); }
+  else{ session.annualMode=false; session.viewTermId=id; notify("Now working on "+termName(id),"ok"); }
+  session.save(false); updateTermChip(); closeModal();
+  if(currentPage) navigate(currentPage);
+}
+function updateTermChip(){
+  const el = $("#termChipLabel"); if(!el) return;
+  el.textContent = session.annualMode ? "Annual" : termName(effectiveTermId(effectiveWing(),null));
+}
+window.openTermPicker=openTermPicker; window.pickTerm=pickTerm;
+
+function buildNavForUser(){
+  const role=session.user.role;
+  if(role==="superadmin"){
+    return [
+      {group:"Overview",items:[
+        {id:"sdash",label:"Dashboard",ic:"📊"},
+        {id:"sswitch",label:"Switch Wing View",ic:"🔄"},
+        {id:"sreports",label:"All Reports",ic:"📄"},
+        {id:"sanalysis",label:"All Analysis",ic:"📈"}
+      ]},
+      {group:"Academic (Both Wings)",items:[
+        {id:"sstudents",label:"All Students",ic:"🎓"},
+        {id:"steachers",label:"All Teachers & Signatures",ic:"✍️"},
+        {id:"sclasses",label:"All Classes",ic:"🏫"},
+        {id:"ssubjects",label:"All Subjects",ic:"📚"},
+        {id:"hhomeroom",label:"Homeroom Assignment",ic:"🏠"}
+      ]},
+      {group:"Analysis Detail",items:[
+        {id:"hclass",label:"Class Analysis",ic:"📊"},
+        {id:"hbest",label:"Best Performers",ic:"🏆"},
+        {id:"hstruggle",label:"Struggling Learners",ic:"⚠️"},
+        {id:"hannual",label:"Annual Analysis",ic:"📅"}
+      ]},
+      {group:"Administration",items:[
+        {id:"spromote",label:"Promotion",ic:"⬆️"},
+        {id:"hterms",label:"Set Wing Term",ic:"🗓️"},
+        {id:"hsettings",label:"Wing Settings",ic:"⚙️"},
+        {id:"ssettings",label:"System Settings",ic:"🛠️"},
+        {id:"susers",label:"All Users",ic:"👥"},
+        {id:"happrovals",label:"Pending Approvals",ic:"✅"},
+        {id:"hbackup",label:"Backup",ic:"💾"},
+        {id:"saudit",label:"Audit Logs",ic:"📋"},
+        {id:"sreadme",label:"README (Restricted)",ic:"📖"}
+      ]}
+    ];
+  }
+  if(role==="headteacher"){
+    return [
+      {group:"Overview",items:[{id:"hdash",label:"Dashboard",ic:"📊"}]},
+      {group:"Academic",items:[
+        {id:"hstudents",label:"Students",ic:"🎓"},
+        {id:"hteachers",label:"Teachers",ic:"👩‍🏫"},
+        {id:"hclasses",label:"Classes & Streams",ic:"🏫"},
+        {id:"hsubjects",label:"Subjects",ic:"📚"},
+        {id:"hhomeroom",label:"Homeroom Assignment",ic:"🏠"},
+        {id:"hreports",label:"Reports",ic:"📄"},
+        {id:"hterms",label:"Set Wing Term",ic:"🗓️"}
+      ]},
+      {group:"Analysis",items:[
+        {id:"hanalysis",label:"Analysis Hub",ic:"📈"},
+        {id:"hbest",label:"Best Performers",ic:"🏆"},
+        {id:"hstruggle",label:"Struggling Learners",ic:"⚠️"},
+        {id:"hannual",label:"Annual Analysis",ic:"📅"}
+      ]},
+      {group:"Administration",items:[
+        {id:"hpromote",label:"Promotion",ic:"⬆️"},
+        {id:"hsettings",label:"Wing Settings",ic:"⚙️"},
+        {id:"happrovals",label:"Pending Approvals",ic:"✅"},
+        {id:"hbackup",label:"Backup",ic:"💾"}
+      ]}
+    ];
+  }
+  if(role==="teacher"){
+    const isHomeroom = homeroomClassIds(session.user.id).length > 0;
+    const items = [
+      {id:"tdash",label:"Dashboard",ic:"📊"},
+      {id:"tgradebook",label:"My Gradebook",ic:"📝"}
+    ];
+    if(isHomeroom){
+      items.push({id:"thomeroom",label:"Homeroom Duties",ic:"🏠"});
+      items.push({id:"tclass",label:"My Class Analysis",ic:"📈"});
+      items.push({id:"tprint",label:"Print Class Reports",ic:"🖨"});
+      items.push({id:"treports",label:"Student Reports",ic:"📄"});
+      items.push({id:"tclassterm",label:"Set Class Term",ic:"🗓️"});
+    }
+    items.push({id:"tprofile",label:"Profile & Signature",ic:"✍️"});
+    return [{group:"Teaching",items}];
+  }
+  return [];
+}
+let currentPage=null;
+function renderNav(){
+  const groups=buildNavForUser(), nav=$("#navMenu");
+  nav.innerHTML = groups.map(g=>`<div class="group">${esc(g.group)}</div>
+    ${g.items.map(it=>`<a href="#" data-page="${it.id}"><span class="ic">${it.ic}</span>${esc(it.label)}</a>`).join("")}`).join("");
+  nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();navigate(a.dataset.page);}));
+}
+function setActiveNav(p){ $$("#navMenu a").forEach(a=>a.classList.toggle("active",a.dataset.page===p)); }
+function navigate(page){
+  currentPage=page; setActiveNav(page); $("#sidebar").classList.remove("open");
+  clearReportArea();
+  const c=$("#content"); c.innerHTML=""; updateTermChip();
+  const titles={
+    sdash:["Super Admin Dashboard","Full system oversight"],
+    sswitch:["Switch Wing View","Filter view by wing or see both"],
+    susers:["All Users",""],
+    steachers:["All Teachers & Signatures","Both wings"],
+    sstudents:["All Students","Both wings"],
+    sclasses:["All Classes","Both wings"],
+    ssubjects:["All Subjects",""],
+    sreports:["All Reports","Both wings · any term"],
+    sanalysis:["All Analysis","Both wings"],
+    spromote:["Promotion","Both wings"],
+    ssettings:["System Settings",""],
+    sbackup:["Backup",""],
+    saudit:["Audit Logs",""],
+    sreadme:["README (Restricted)",""],
+    hdash:["Head Teacher Dashboard",""], hstudents:["Students",""], hteachers:["Teachers",""],
+    hclasses:["Classes & Streams",""], hsubjects:["Subjects",""], hhomeroom:["Homeroom Assignment",""],
+    hreports:["Reports",""], hterms:["Set Wing Term",""],
+    hanalysis:["Analysis Hub",""], hclass:["Class Analysis",""], hbest:["Best Performers",""],
+    hstruggle:["Struggling Learners",""], hannual:["Annual Analysis",""],
+    hpromote:["Promotion",""], hsettings:["Wing Settings",""], happrovals:["Pending Approvals",""], hbackup:["Backup",""],
+    tdash:["Teacher Dashboard",""], tgradebook:["My Gradebook",""], thomeroom:["Homeroom Duties",""],
+    tclass:["My Class Analysis",""], tprint:["Print Class Reports",""], treports:["Student Reports",""],
+    tclassterm:["Set Class Term",""], tprofile:["Profile & Signature",""]
+  };
+  const [t,s]=titles[page]||["Dashboard",""];
+  $("#topTitle").innerHTML=esc(t)+`<small>${esc(s)}</small>`;
+  try{
+    if(page==="sdash") renderSuperDash();
+    else if(page==="sswitch") renderWingSwitch();
+    else if(page==="susers") renderUsers();
+    else if(page==="steachers") renderTeachers();
+    else if(page==="sstudents") renderStudents();
+    else if(page==="sclasses") renderClasses();
+    else if(page==="ssubjects") renderSubjects();
+    else if(page==="sreports") renderReports();
+    else if(page==="sanalysis") renderAnalysisHub("superadmin");
+    else if(page==="spromote") renderPromotion();
+    else if(page==="ssettings") renderSystemSettings();
+    else if(page==="sbackup") renderSuperBackup();
+    else if(page==="saudit") renderAudit();
+    else if(page==="sreadme") renderReadme();
+    else if(page==="hdash") renderHeadDash();
+    else if(page==="hstudents") renderStudents();
+    else if(page==="hteachers") renderTeachers();
+    else if(page==="hclasses") renderClasses();
+    else if(page==="hsubjects") renderSubjects();
+    else if(page==="hhomeroom") renderHomeroomAssignment();
+    else if(page==="hreports") renderReports();
+    else if(page==="hterms") renderWingTermSettings();
+    else if(page==="hanalysis") renderAnalysisHub("headteacher");
+    else if(page==="hclass") renderClassAnalysis();
+    else if(page==="hbest") renderBest();
+    else if(page==="hstruggle") renderStruggling();
+    else if(page==="hannual") renderAnnual();
+    else if(page==="hpromote") renderPromotion();
+    else if(page==="hsettings") renderWingSettings();
+    else if(page==="happrovals") renderApprovals();
+    else if(page==="hbackup") renderSchoolBackup();
+    else if(page==="tdash") renderTeacherDash();
+    else if(page==="tgradebook") renderGradebook();
+    else if(page==="thomeroom") renderHomeroomDuties();
+    else if(page==="tclass") renderTeacherClassAnalysis();
+    else if(page==="tprint") renderTeacherBatchPrint();
+    else if(page==="treports") renderReports();
+    else if(page==="tclassterm") renderClassTermSettings();
+    else if(page==="tprofile") renderProfile();
+    else c.innerHTML=`<div class="empty"><div class="big">🚧</div>Page not found.</div>`;
+  }catch(err){ console.error(err); c.innerHTML=`<div class="alert bad">Error: ${esc(err.message)}</div>`; }
+}
+window.navigate=navigate;
+
+function renderWingSwitch(){
+  if(session.user.role!=="superadmin"){ notify("Only Super Admin can switch wings.","bad"); navigate("hdash"); return; }
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Switch Wing View</h2><p>Super Admin — you already have access to everything. Choose a wing to filter, or view both.</p></div></div>
+  <div class="wing-grid" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="wing-card" onclick="selectWing(null)"><div class="icon">🌍</div><h4>Both Wings</h4><p>Everything (default)</p></div>
+    <div class="wing-card" onclick="selectWing('primary')"><div class="icon">🧒</div><h4>Primary Wing</h4><p>Reception – Year 6</p></div>
+    <div class="wing-card" onclick="selectWing('secondary')"><div class="icon">🎓</div><h4>Secondary Wing</h4><p>Year 7 – Year 13</p></div>
+  </div>`;
+}
+function selectWing(wing){
+  if(session.user.role!=="superadmin"){ notify("Only Super Admin can switch wings.","bad"); return; }
+  session.wing=wing; session.save(false); applyBranding();
+  notify(wing? `Viewing ${SCHOOL_CONFIG.wings[wing].label}` : "Viewing Both Wings","ok");
+  navigate("sdash");
+}
+window.selectWing=selectWing;
+
+function renderSuperDash(){
+  const d=DB.data;
+  const students=d.students.filter(s=>!s.archived);
+  const teachers=d.users.filter(u=>u.role==="teacher");
+  const heads=d.users.filter(u=>u.role==="headteacher");
+  const primaryCount=students.filter(s=>classWing(s.classId)==="primary").length;
+  const secondaryCount=students.filter(s=>classWing(s.classId)==="secondary").length;
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Super Admin Dashboard</h2><p>Full access to both wings. Viewing: <b>${session.wing? esc(SCHOOL_CONFIG.wings[session.wing].label) : "Both Wings"}</b></p></div>
+    <button class="btn ghost" onclick="navigate('sswitch')">🔄 Switch Wing View</button></div>
+  <div class="cards">
+    <div class="card stat"><div class="ic blue">👥</div><div><b>${d.users.length}</b><small>Users</small></div></div>
+    <div class="card stat"><div class="ic gold">👩‍🏫</div><div><b>${teachers.length}</b><small>Teachers</small></div></div>
+    <div class="card stat"><div class="ic purple">🏫</div><div><b>${heads.length}</b><small>Head Teachers</small></div></div>
+    <div class="card stat"><div class="ic green">🎓</div><div><b>${students.length}</b><small>Students (P:${primaryCount} / S:${secondaryCount})</small></div></div>
+    <div class="card stat"><div class="ic red">📝</div><div><b>${d.marks.length}</b><small>Marks</small></div></div>
+    <div class="card stat"><div class="ic blue">📋</div><div><b>${d.auditLogs.length}</b><small>Audit</small></div></div>
+  </div>
+  <div class="panel mt3"><div class="ph"><h3>Full System Access</h3></div><div class="pb"><div class="row">
+    <button class="btn primary" onclick="navigate('sreports')">📄 All Reports</button>
+    <button class="btn primary" onclick="navigate('sanalysis')">📈 All Analysis</button>
+    <button class="btn primary" onclick="navigate('sstudents')">🎓 All Students</button>
+    <button class="btn primary" onclick="navigate('steachers')">✍️ All Teachers</button>
+    <button class="btn primary" onclick="navigate('sclasses')">🏫 All Classes</button>
+    <button class="btn primary" onclick="navigate('ssubjects')">📚 All Subjects</button>
+    <button class="btn green" onclick="navigate('hhomeroom')">🏠 Homeroom</button>
+    <button class="btn gold" onclick="navigate('spromote')">⬆️ Promotion</button>
+    <button class="btn ghost" onclick="navigate('susers')">👥 Users</button>
+    <button class="btn ghost" onclick="navigate('ssettings')">⚙️ Settings</button>
+    <button class="btn ghost" onclick="navigate('saudit')">📋 Audit</button>
+  </div></div></div>`;
+}
+function renderUsers(){
+  const d=DB.data;
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>All Users</h2></div><button class="btn primary" onclick="userForm()">+ Add User</button></div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Name</th><th>Username</th><th>Password</th><th>Role</th><th>Wing</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${d.users.map(u=>`<tr>
+      <td><strong>${esc(u.name)}</strong></td><td>${esc(u.username)}</td>
+      <td><span class="pill amber" style="cursor:pointer" onclick="alert('Password: ${esc(u.password||"")}')">•••••</span></td>
+      <td><span class="pill blue">${esc(u.role)}</span></td>
+      <td>${u.wing?`<span class="wing-badge ${u.wing}">${esc(SCHOOL_CONFIG.wings[u.wing].label)}</span>`:"—"}</td>
+      <td>${u.muted?`<span class="pill red">Muted</span>`:u.active!==false?`<span class="pill green">Active</span>`:`<span class="pill grey">Disabled</span>`}</td>
+      <td><button class="btn ghost sm" onclick="userForm('${u.id}')">Edit</button>
+        <button class="btn ghost sm" onclick="resetPassword('${u.id}')">Reset PW</button>
+        <button class="btn ${u.muted?"gold":"ghost"} sm" onclick="toggleMute('${u.id}')">${u.muted?"Unmute":"Mute"}</button>
+        <button class="btn ${u.active!==false?"danger":"gold"} sm" onclick="toggleUser('${u.id}')">${u.active!==false?"Disable":"Enable"}</button>
+        <button class="btn danger sm" onclick="deleteUser('${u.id}')">Delete</button></td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+function userForm(id){
+  const u=id?DB.data.users.find(x=>x.id===id):{name:"",username:"",password:"",role:"teacher",wing:"primary",email:"",active:true,muted:false};
+  const lockWing = id && u.role==="headteacher";
+  openModal(id?"Edit User":"Add User",`
+    <div class="form-grid">
+      <div><label>Name</label><input id="usName" value="${esc(u.name)}" /></div>
+      <div><label>Username</label><input id="usUser" value="${esc(u.username)}" /></div>
+      <div><label>Password</label><input id="usPass" type="text" value="${esc(u.password||"")}" /></div>
+      <div><label>Role</label><select id="usRole"><option value="superadmin" ${u.role==="superadmin"?"selected":""}>Super Admin</option><option value="headteacher" ${u.role==="headteacher"?"selected":""}>Head Teacher</option><option value="teacher" ${u.role==="teacher"?"selected":""}>Teacher</option></select></div>
+      <div class="full"><label>Wing ${lockWing?"(locked for head teachers)":""}</label><select id="usWing" ${lockWing?"disabled":""}><option value="primary" ${u.wing==="primary"?"selected":""}>Primary</option><option value="secondary" ${u.wing==="secondary"?"selected":""}>Secondary</option></select></div>
+      <div class="full"><label>Email</label><input id="usEmail" value="${esc(u.email||"")}" /></div>
+      <div class="full"><label><input type="checkbox" id="usActive" ${u.active!==false?"checked":""}/> Active</label></div>
+      <div class="full"><label><input type="checkbox" id="usMuted" ${u.muted?"checked":""}/> Muted</label></div>
+    </div>`,
+    `<button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveUser('${id||""}')">Save</button>`);
+}
+function saveUser(id){
+  const data={name:$("#usName").value.trim(),username:$("#usUser").value.trim(),password:$("#usPass").value,role:$("#usRole").value,wing:$("#usRole").value==="superadmin"?"":$("#usWing").value,email:$("#usEmail").value.trim(),active:$("#usActive").checked,muted:$("#usMuted").checked};
+  if(!data.name||!data.username){ notify("Required.","bad"); return; }
+  if(id){ const u=DB.data.users.find(x=>x.id===id); if(u.role==="headteacher" && data.role==="headteacher"){ data.wing=u.wing; } Object.assign(u,data); }
+  else{ if(!data.password) data.password="changeme123"; if(DB.data.users.some(u=>u.username.toLowerCase()===data.username.toLowerCase())){ notify("Username exists.","bad"); return; } DB.data.users.push({id:uid("u"),schoolId:currentSchool().id,signature:"",...data}); }
+  DB.save(); closeModal(); renderUsers(); notify("Saved.","ok");
+}
+function toggleUser(id){ const u=DB.data.users.find(x=>x.id===id); u.active=!u.active; DB.save(); renderUsers(); }
+function toggleMute(id){ const u=DB.data.users.find(x=>x.id===id); u.muted=!u.muted; DB.save(); renderUsers(); }
+function deleteUser(id){ const u=DB.data.users.find(x=>x.id===id); if(u.role==="superadmin" && DB.data.users.filter(x=>x.role==="superadmin").length<=1){ notify("Cannot delete last SA.","bad"); return; } if(!confirm("Delete "+u.name+"?")) return; DB.data.users=DB.data.users.filter(x=>x.id!==id); DB.data.teacherAssignments=DB.data.teacherAssignments.filter(a=>a.teacherId!==id); DB.save(); renderUsers(); }
+function resetPassword(id){ const u=DB.data.users.find(x=>x.id===id); const np=prompt("New password for "+u.username+":","changeme123"); if(np){ u.password=np; DB.save(); notify("Reset.","ok"); } }
+window.userForm=userForm; window.saveUser=saveUser; window.toggleUser=toggleUser; window.toggleMute=toggleMute; window.deleteUser=deleteUser; window.resetPassword=resetPassword;
+
+function renderTeachers(){
+  const school=currentSchool();
+  let teachers=DB.data.users.filter(u=>u.schoolId===school.id && (u.role==="teacher"||u.role==="headteacher"));
+  if(session.user.role==="headteacher") teachers=teachers.filter(u=>u.wing===session.user.wing);
+  else if(session.user.role==="superadmin" && session.wing) teachers=teachers.filter(u=>u.wing===session.wing);
+  $("#content").innerHTML = `
+  <div class="page-head">
+    <div><h2>Teachers & Signatures</h2><p>${session.user.role==="superadmin" ? "Both wings" : esc(SCHOOL_CONFIG.wings[session.user.wing].label)}</p></div>
+    <div class="row">
+      <button class="btn gold" onclick="downloadTeacherTemplate()">⬇ Excel Template</button>
+      <button class="btn ghost" onclick="triggerTeacherImport()">⬆ Import Excel</button>
+      <button class="btn ghost" onclick="downloadTeachersList()">⬇ Export List</button>
+      <button class="btn primary" onclick="teacherForm()">+ Add Manually</button>
+    </div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Name</th><th>Username</th><th>Wing</th><th>Also Teaches</th><th>Signature</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${teachers.map(t=>{
+      const assignedWings=[...new Set(DB.data.teacherAssignments.filter(a=>a.teacherId===t.id).map(a=>classWing(a.classId)).filter(Boolean))];
+      const otherWings = assignedWings.filter(w=>w!==t.wing);
+      const crossTag = otherWings.length? otherWings.map(w=>`<span class="wing-badge ${w}">${esc(SCHOOL_CONFIG.wings[w].label)}</span>`).join(" "):`<span class="muted">—</span>`;
+      return `<tr>
+        <td><strong>${esc(t.name)}</strong></td><td>${esc(t.username)}</td>
+        <td>${t.wing?`<span class="wing-badge ${t.wing}">${esc(SCHOOL_CONFIG.wings[t.wing].label)}</span>`:"—"}</td>
+        <td>${crossTag}</td>
+        <td>${t.signature?`<img src="${esc(t.signature)}" style="max-height:34px;max-width:110px;object-fit:contain" />`:`<span class="pill amber">No signature</span>`}</td>
+        <td>${t.muted?`<span class="pill red">Muted</span>`:t.active!==false?`<span class="pill green">Active</span>`:`<span class="pill grey">Disabled</span>`}</td>
+        <td><button class="btn ghost sm" onclick="teacherForm('${t.id}')">Edit</button>
+            <button class="btn green sm" onclick="signatureForm('${t.id}')">✍ Sign</button>
+            <button class="btn ghost sm" onclick="assignTeacher('${t.id}')">Assign</button>
+            <button class="btn ghost sm" onclick="resetPassword('${t.id}')">Reset PW</button>
+            <button class="btn ${t.muted?"gold":"ghost"} sm" onclick="toggleMute('${t.id}')">${t.muted?"Unmute":"Mute"}</button>
+            <button class="btn ${t.active!==false?"danger":"gold"} sm" onclick="toggleUser('${t.id}')">${t.active!==false?"Disable":"Enable"}</button>
+            <button class="btn danger sm" onclick="deleteUser('${t.id}')">Delete</button></td></tr>`;
+    }).join("")}</tbody>
+  </table></div>`;
+}
+function teacherForm(id){
+  const t=id?DB.data.users.find(x=>x.id===id):{name:"",username:"",password:"",role:"teacher",wing:effectiveWing(),email:"",active:true,muted:false};
+  openModal(id?"Edit Teacher":"Add Teacher",`
+    <div class="form-grid">
+      <div><label>Name</label><input id="tName" value="${esc(t.name)}" /></div>
+      <div><label>Username</label><input id="tUser" value="${esc(t.username)}" /></div>
+      <div><label>Password</label><input id="tPass" type="text" value="${esc(t.password||"")}" /></div>
+      <div><label>Role</label><select id="tRole"><option value="teacher" ${t.role==="teacher"?"selected":""}>Teacher</option><option value="headteacher" ${t.role==="headteacher"?"selected":""}>Head Teacher</option></select></div>
+      <div class="full"><label>Home Wing</label><select id="tWing"><option value="primary" ${t.wing==="primary"?"selected":""}>Primary</option><option value="secondary" ${t.wing==="secondary"?"selected":""}>Secondary</option></select></div>
+      <div class="full"><label>Email</label><input id="tEmail" value="${esc(t.email||"")}" /></div>
+      <div class="full"><label><input type="checkbox" id="tActive" ${t.active!==false?"checked":""}/> Active</label></div>
+      <div class="full"><label><input type="checkbox" id="tMuted" ${t.muted?"checked":""}/> Muted</label></div>
+    </div>`,
+    `<button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveTeacher('${id||""}')">Save</button>`);
+}
+function saveTeacher(id){
+  const data={name:$("#tName").value.trim(),username:$("#tUser").value.trim(),password:$("#tPass").value,role:$("#tRole").value,wing:$("#tWing").value,email:$("#tEmail").value.trim(),active:$("#tActive").checked,muted:$("#tMuted").checked,schoolId:currentSchool().id};
+  if(!data.name||!data.username){ notify("Required.","bad"); return; }
+  if(id){ const u=DB.data.users.find(x=>x.id===id); if(!data.password) delete data.password; Object.assign(u,data); }
+  else{ if(!data.password) data.password="changeme123"; DB.data.users.push({id:uid("u"),signature:"",...data}); }
+  DB.save(); closeModal(); renderTeachers(); notify("Saved.","ok");
+}
+function signatureForm(userId){
+  const u=DB.data.users.find(x=>x.id===userId);
+  openModal("Electronic Signature — "+u.name,`
+    <div class="alert info">Upload a transparent PNG signature.</div>
+    <div class="sig-pad ${u.signature?"has-sig":""}" onclick="document.getElementById('sigFile').click()">
+      ${u.signature?`<img src="${esc(u.signature)}" />`:`<div class="ph">Click to upload signature</div>`}
+    </div>
+    <input type="file" id="sigFile" accept="image/png,image/jpeg" class="hidden" onchange="uploadSignature(event,'${userId}')" />
+    ${u.signature?`<button class="btn danger mt2" onclick="removeSignature('${userId}')">Remove</button>`:""}`,
+    `<button class="btn ghost" onclick="closeModal()">Close</button>`);
+}
+function uploadSignature(ev,userId){
+  const file=ev.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{ const u=DB.data.users.find(x=>x.id===userId); u.signature=r.result; DB.save(); notify("Signature attached.","ok"); closeModal(); renderTeachers(); };
+  r.readAsDataURL(file);
+}
+function removeSignature(userId){ const u=DB.data.users.find(x=>x.id===userId); u.signature=""; DB.save(); notify("Removed.","warn"); closeModal(); renderTeachers(); }
+window.teacherForm=teacherForm; window.saveTeacher=saveTeacher; window.signatureForm=signatureForm; window.uploadSignature=uploadSignature; window.removeSignature=removeSignature;
+
+function assignTeacher(teacherId){
+  const school=currentSchool(), teacher=DB.data.users.find(x=>x.id===teacherId);
+  const scopeWing = (session.user.role==="headteacher")? session.user.wing : null;
+  let classes = schoolClasses(school.id);
+  if(scopeWing) classes = classes.filter(c=>c.wing===scopeWing);
+  const subjects=schoolSubjects(school.id);
+  const existing=DB.data.teacherAssignments.filter(a=>a.teacherId===teacherId);
+  openModal("Assign — "+teacher.name,`
+    <div class="alert info">${scopeWing? `Assigning for <b>${SCHOOL_CONFIG.wings[scopeWing].label}</b> only.` : "Super Admin — assign across both wings."}</div>
+    <div class="form-grid">
+      <div><label>Class</label><select id="asgClass">${classes.map(c=>`<option value="${c.id}">${esc(c.name)} (${esc(SCHOOL_CONFIG.wings[c.wing].label)})</option>`).join("")}</select></div>
+      <div><label>Subject (blank = Homeroom only)</label><select id="asgSubject"><option value="">— None —</option>${subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></div>
+      <div class="full"><label><input type="checkbox" id="asgHomeroom" /> Mark as Homeroom Teacher</label></div>
+    </div>
+    <div class="mt2"><strong>Current Assignments</strong>
+      <ul style="margin-left:18px;font-size:13px">${existing.map(a=>`<li>${className(a.classId)} <span class="muted">(${SCHOOL_CONFIG.wings[classWing(a.classId)].label})</span> — ${a.role==="homeroom"?"<b>Homeroom</b>":subjectName(a.subjectId)} <button class="btn danger sm" onclick="removeAssignment('${a.id}')">✕</button></li>`).join("")||"<li class='muted'>None</li>"}</ul>
+    </div>`,
+    `<button class="btn ghost" onclick="closeModal()">Close</button><button class="btn primary" onclick="addAssignment('${teacherId}')">Add</button>`);
+}
+function addAssignment(teacherId){
+  const teacher=DB.data.users.find(x=>x.id===teacherId);
+  const classId=$("#asgClass").value, subjectId=$("#asgSubject").value, isHomeroom=$("#asgHomeroom").checked;
+  if(!classId){ notify("Select a class.","bad"); return; }
+  if(session.user.role==="headteacher" && classWing(classId)!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  if(isHomeroom) setHomeroomTeacher(classId,teacherId);
+  if(subjectId) DB.data.teacherAssignments.push({id:uid("ta"),schoolId:currentSchool().id,teacherId,classId,subjectId,role:"subject",wing:classWing(classId)});
+  DB.save(); closeModal(); renderTeachers(); notify("Added.","ok");
+}
+function removeAssignment(id){
+  const a=DB.data.teacherAssignments.find(x=>x.id===id);
+  if(session.user.role==="headteacher" && a && classWing(a.classId)!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  if(a&&a.role==="homeroom"){ const s=DB.data.settings[currentSchool().id]; if(s.homeroomTeachers) delete s.homeroomTeachers[a.classId]; }
+  DB.data.teacherAssignments=DB.data.teacherAssignments.filter(x=>x.id!==id);
+  DB.save(); notify("Removed.","warn"); closeModal(); renderTeachers();
+}
+window.assignTeacher=assignTeacher; window.addAssignment=addAssignment; window.removeAssignment=removeAssignment;
+
+function renderHomeroomAssignment(){
+  const school=currentSchool();
+  const wing = session.user.role==="headteacher" ? session.user.wing : (session.user.role==="superadmin" && session.wing ? session.wing : null);
+  let classes = schoolClasses(school.id, wing);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Homeroom Assignment</h2><p>${wing? esc(SCHOOL_CONFIG.wings[wing].label) : "Both wings"}</p></div></div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Class</th><th>Wing</th><th>Homeroom Teacher</th><th>Signature</th><th>Actions</th></tr></thead>
+    <tbody>${classes.map(c=>{
+      const ht=homeroomTeacher(c.id);
+      return `<tr><td><strong>${esc(c.name)}</strong></td>
+        <td><span class="wing-badge ${c.wing}">${esc(SCHOOL_CONFIG.wings[c.wing].label)}</span></td>
+        <td>${ht?esc(ht.name):`<span class="muted">Not assigned</span>`}</td>
+        <td>${ht&&ht.signature?`<img src="${esc(ht.signature)}" style="max-height:34px;max-width:110px;object-fit:contain" />`:`<span class="pill amber">No signature</span>`}</td>
+        <td><button class="btn primary sm" onclick="assignHomeroom('${c.id}')">${ht?"Change":"Assign"}</button>
+            ${ht?`<button class="btn danger sm" onclick="unassignHomeroom('${c.id}')">Unassign</button>`:""}
+            ${ht?`<button class="btn green sm" onclick="signatureForm('${ht.id}')">✍ Sign</button>`:""}</td></tr>`;
+    }).join("")}</tbody>
+  </table></div>`;
+}
+function assignHomeroom(classId){
+  const school=currentSchool();
+  const wing = session.user.role==="headteacher" ? session.user.wing : classWing(classId);
+  const teachers=DB.data.users.filter(u=>u.schoolId===school.id && (u.role==="teacher"||u.role==="headteacher") && (u.wing===wing || u.role==="headteacher") && u.active!==false);
+  openModal("Assign Homeroom — "+className(classId),`
+    <div class="form-grid"><div class="full"><label>Teacher</label>
+      <select id="hrtTeacher">${teachers.map(t=>`<option value="${t.id}">${esc(t.name)}${t.signature?" ✓":""}</option>`).join("")}</select></div></div>`,
+    `<button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveHomeroom('${classId}')">Assign</button>`);
+}
+function saveHomeroom(classId){ setHomeroomTeacher(classId,$("#hrtTeacher").value); closeModal(); renderHomeroomAssignment(); notify("Assigned.","ok"); }
+function unassignHomeroom(classId){ setHomeroomTeacher(classId,null); renderHomeroomAssignment(); notify("Removed.","warn"); }
+window.assignHomeroom=assignHomeroom; window.saveHomeroom=saveHomeroom; window.unassignHomeroom=unassignHomeroom;
+
+function renderSubjects(){
+  const school=currentSchool();
+  const subjects=allSubjects(school.id);
+  const canEdit = session.user.role==="superadmin" || session.user.role==="headteacher";
+  $("#content").innerHTML = `
+  <div class="page-head">
+    <div><h2>Subjects</h2><p>Add, edit or delete subjects.</p></div>
+    ${canEdit?`<button class="btn primary" onclick="subjectForm()">+ Add Subject</button>`:""}
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Order</th><th>Subject</th><th>Assigned Teachers</th><th>Status</th>${canEdit?"<th>Actions</th>":""}</tr></thead>
+    <tbody>${subjects.map(s=>{
+      const asg=DB.data.teacherAssignments.filter(a=>a.subjectId===s.id);
+      const teachers=asg.map(a=>DB.data.users.find(u=>u.id===a.teacherId)?.name).filter(Boolean).join(", ")||"—";
+      return `<tr>
+        <td class="num">${s.order+1}</td>
+        <td><strong>${esc(s.name)}</strong></td>
+        <td class="small">${esc(teachers)}</td>
+        <td><span class="pill ${s.active!==false?"green":"red"}">${s.active!==false?"Active":"Inactive"}</span></td>
+        ${canEdit?`<td>
+          <button class="btn ghost sm" onclick="subjectForm('${s.id}')">Edit</button>
+          <button class="btn ${s.active!==false?"gold":"primary"} sm" onclick="toggleSubject('${s.id}')">${s.active!==false?"Deactivate":"Activate"}</button>
+          <button class="btn danger sm" onclick="deleteSubject('${s.id}')">Delete</button></td>`:""}
+      </tr>`;
+    }).join("")}</tbody>
+  </table></div>`;
+}
+function subjectForm(id){
+  const s=id?DB.data.subjects.find(x=>x.id===id):{name:"",order:allSubjects(currentSchool().id).length,active:true};
+  openModal(id?"Edit Subject":"Add Subject",`
+    <div class="form-grid">
+      <div><label>Subject Name</label><input id="subName" value="${esc(s.name)}" /></div>
+      <div><label>Display Order</label><input id="subOrder" type="number" value="${s.order}" /></div>
+      <div class="full"><label><input type="checkbox" id="subActive" ${s.active!==false?"checked":""}/> Active</label></div>
+    </div>`,
+    `<button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveSubject('${id||""}')">Save</button>`);
+}
+function saveSubject(id){
+  const school=currentSchool();
+  const data={ name:$("#subName").value.trim(), order:+$("#subOrder").value||0, active:$("#subActive").checked };
+  if(!data.name){ notify("Subject name required.","bad"); return; }
+  if(id){ Object.assign(DB.data.subjects.find(x=>x.id===id),data); audit("Updated subject",data.name); }
+  else{ DB.data.subjects.push({id:uid("s"),schoolId:school.id,...data}); audit("Added subject",data.name); }
+  DB.save(); closeModal(); renderSubjects(); notify("Saved.","ok");
+}
+function toggleSubject(id){ const s=DB.data.subjects.find(x=>x.id===id); s.active=!s.active; DB.save(); renderSubjects(); notify("Updated.","warn"); }
+function deleteSubject(id){
+  const s=DB.data.subjects.find(x=>x.id===id);
+  const used=DB.data.marks.some(m=>m.subjectId===id) || DB.data.teacherAssignments.some(a=>a.subjectId===id);
+  if(used && !confirm(`"${s.name}" has marks or assignments. Delete anyway?`)) return;
+  DB.data.subjects=DB.data.subjects.filter(x=>x.id!==id);
+  DB.data.teacherAssignments=DB.data.teacherAssignments.filter(a=>a.subjectId!==id);
+  audit("Deleted subject",s.name);
+  DB.save(); renderSubjects(); notify("Deleted.","bad");
+}
+window.subjectForm=subjectForm; window.saveSubject=saveSubject; window.toggleSubject=toggleSubject; window.deleteSubject=deleteSubject;
+
+function renderClasses(){
+  const school=currentSchool();
+  const wing = session.user.role==="headteacher" ? session.user.wing : (session.user.role==="superadmin" && session.wing ? session.wing : null);
+  let classes=schoolClasses(school.id, wing);
+  const canEdit = session.user.role==="superadmin" || session.user.role==="headteacher";
+  $("#content").innerHTML = `
+  <div class="page-head">
+    <div><h2>Classes & Streams</h2><p>${wing? esc(SCHOOL_CONFIG.wings[wing].label) : "Both wings"}</p></div>
+    ${canEdit?`<button class="btn primary" onclick="classForm()">+ Add Class</button>`:""}
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Class</th><th>Base</th><th>Stream</th><th>Wing</th><th>Students</th><th>Homeroom</th>${canEdit?"<th>Actions</th>":""}</tr></thead>
+    <tbody>${classes.map(c=>{
+      const count=schoolStudents(school.id).filter(s=>s.classId===c.id).length;
+      const ht=homeroomTeacher(c.id);
+      return `<tr>
+        <td><strong>${esc(c.name)}</strong></td>
+        <td>${esc(c.base||APP.baseClassName(c.name))}</td>
+        <td>${c.stream?`<span class="pill blue">${esc(c.stream)}</span>`:`<span class="muted">—</span>`}</td>
+        <td><span class="wing-badge ${c.wing}">${esc(SCHOOL_CONFIG.wings[c.wing].label)}</span></td>
+        <td class="num">${count}</td>
+        <td>${ht?esc(ht.name):`<span class="muted">—</span>`}</td>
+        ${canEdit?`<td>
+          <button class="btn ghost sm" onclick="classForm('${c.id}')">Edit</button>
+          <button class="btn green sm" onclick="assignHomeroom('${c.id}')">Homeroom</button>
+          <button class="btn danger sm" onclick="deleteClass('${c.id}')">Delete</button></td>`:""}
+      </tr>`;
+    }).join("")}</tbody>
+  </table></div>`;
+}
+function classForm(id){
+  const school=currentSchool();
+  const c=id?DB.data.classes.find(x=>x.id===id):{name:"",base:"Year 2",stream:"",wing:session.user.role==="headteacher"? session.user.wing : effectiveWing()};
+  const baseOptions=[...APP.primaryClasses, ...APP.secondaryClasses];
+  openModal(id?"Edit Class":"Add Class",`
+    <div class="form-grid">
+      <div class="full"><label>Base Class</label>
+        <select id="clBase">${baseOptions.map(b=>`<option value="${b}" ${(c.base||APP.baseClassName(c.name))===b?"selected":""}>${esc(b)}</option>`).join("")}</select>
+      </div>
+      <div><label>Stream (optional)</label><input id="clStream" placeholder="A / B / C" value="${esc(c.stream||"")}" maxlength="3" /></div>
+      <div><label>Wing</label><select id="clWing">
+        <option value="primary" ${c.wing==="primary"?"selected":""}>Primary</option>
+        <option value="secondary" ${c.wing==="secondary"?"selected":""}>Secondary</option>
+      </select></div>
+      <div class="full"><label>Display Name (auto)</label><input id="clName" value="${esc(c.name)}" readonly /></div>
+    </div>`,
+    `<button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveClass('${id||""}')">Save</button>`);
+  setTimeout(()=>{
+    const upd=()=>{ const b=$("#clBase").value, s=$("#clStream").value.trim().toUpperCase(); $("#clName").value=s?`${b} ${s}`:b; };
+    $("#clBase").addEventListener("change",upd); $("#clStream").addEventListener("input",upd); upd();
+  },100);
+}
+function saveClass(id){
+  const school=currentSchool();
+  const base=$("#clBase").value, stream=$("#clStream").value.trim().toUpperCase();
+  const name= stream? `${base} ${stream}` : base;
+  if(!name){ notify("Class name required.","bad"); return; }
+  const wing=$("#clWing").value;
+  if(session.user.role==="headteacher" && wing!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  if(id){ Object.assign(DB.data.classes.find(x=>x.id===id),{name,base,stream,wing}); audit("Updated class",name); }
+  else{
+    if(DB.data.classes.some(c=>c.schoolId===school.id && c.name===name)){ notify("Class already exists.","bad"); return; }
+    DB.data.classes.push({id:uid("c"),schoolId:school.id,name,base,stream,wing,section:""}); audit("Added class",name);
+  }
+  DB.save(); closeModal(); renderClasses(); notify("Saved.","ok");
+}
+function deleteClass(id){
+  const c=DB.data.classes.find(x=>x.id===id);
+  if(session.user.role==="headteacher" && c.wing!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  const count=schoolStudents(currentSchool().id).filter(s=>s.classId===id).length;
+  if(count>0 && !confirm(`${c.name} has ${count} students. Delete anyway?`)) return;
+  DB.data.classes=DB.data.classes.filter(x=>x.id!==id);
+  audit("Deleted class",c.name);
+  DB.save(); renderClasses(); notify("Deleted.","bad");
+}
+window.classForm=classForm; window.saveClass=saveClass; window.deleteClass=deleteClass;
+
+function renderStudents(){
+  const school=currentSchool();
+  let students = schoolStudents(school.id);
+  if(session.user.role==="headteacher") students = students.filter(s=>classWing(s.classId)===session.user.wing);
+  else if(session.user.role==="teacher") students = students.filter(s=>classesForCurrentUser().some(c=>c.id===s.classId));
+  else if(session.user.role==="superadmin" && session.wing) students = students.filter(s=>classWing(s.classId)===session.wing);
+  const canImport = session.user.role==="superadmin" || session.user.role==="headteacher";
+  $("#content").innerHTML = `
+  <div class="page-head">
+    <div><h2>Students</h2><p>${students.length} learners. ${session.user.role==="superadmin" ? (session.wing? esc(SCHOOL_CONFIG.wings[session.wing].label) : "Both wings") : ""}</p></div>
+    ${canImport?`<div class="row">
+      <button class="btn gold" onclick="downloadStudentTemplate()">⬇ Excel Template</button>
+      <button class="btn ghost" onclick="triggerStudentImport()">⬆ Import Excel</button>
+      <button class="btn ghost" onclick="downloadStudentsList()">⬇ Export List</button>
+      <button class="btn primary" onclick="studentForm()">+ Add Manually</button>
+    </div>`:`<button class="btn primary" onclick="studentForm()">+ Add</button>`}
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Wing</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${students.map(s=>`<tr>
+      <td>${esc(s.id)}</td><td><strong>${esc(s.name)}</strong></td><td>${esc(className(s.classId))}</td>
+      <td><span class="wing-badge ${classWing(s.classId)}">${esc(SCHOOL_CONFIG.wings[classWing(s.classId)]?.label||"—")}</span></td>
+      <td>${s.graduated?`<span class="pill purple">Graduated</span>`:s.awaitingApproval?`<span class="pill amber">Awaiting approval</span>`:`<span class="pill green">Active</span>`}</td>
+      <td><button class="btn ghost sm" onclick="studentForm('${s.id}')">Edit</button>
+          <button class="btn primary sm" onclick="viewReport('${s.id}')">Report</button>
+          <button class="btn danger sm" onclick="archiveStudent('${s.id}')">Archive</button></td></tr>`).join("")}</tbody>
+  </table></div>`;
+}
+function studentForm(id){
+  const school=currentSchool();
+  const s=id?DB.data.students.find(x=>x.id===id):{id:"",admission:"",firstName:"",middleName:"",lastName:"",gender:"",dob:"",classId:schoolClasses(school.id)[0]?.id||"",parentName:"",parentEmail:"",parentPhone:"",archived:false};
+  let classesList=schoolClasses(school.id);
+  if(session.user.role==="headteacher") classesList=classesList.filter(c=>c.wing===session.user.wing);
+  else if(session.user.role==="superadmin" && session.wing) classesList=classesList.filter(c=>c.wing===session.wing);
+  const classes=classesList.map(c=>`<option value="${c.id}" ${s.classId===c.id?"selected":""}>${esc(c.name)}</option>`).join("");
+  openModal(id?"Edit Student":"Add Student",`
+    <div class="form-grid">
+      <div><label>Student ID</label><input id="stId" value="${esc(s.id)}" ${id?"disabled":""} /></div>
+      <div><label>Admission No</label><input id="stAdm" value="${esc(s.admission)}" /></div>
+      <div><label>First Name</label><input id="stFirst" value="${esc(s.firstName)}" /></div>
+      <div><label>Middle Name</label><input id="stMiddle" value="${esc(s.middleName)}" /></div>
+      <div><label>Last Name</label><input id="stLast" value="${esc(s.lastName)}" /></div>
+      <div><label>Gender</label><select id="stGender"><option value="">—</option><option ${s.gender==="M"?"selected":""}>M</option><option ${s.gender==="F"?"selected":""}>F</option></select></div>
+      <div><label>DOB</label><input id="stDob" type="date" value="${esc(s.dob)}" /></div>
+      <div><label>Class</label><select id="stClass">${classes}</select></div>
+      <div><label>Parent</label><input id="stParent" value="${esc(s.parentName||"")}" /></div>
+      <div><label>Parent Email</label><input id="stParentEmail" value="${esc(s.parentEmail||"")}" /></div>
+      <div><label>Parent Phone</label><input id="stPhone" value="${esc(s.parentPhone||"")}" /></div>
+    </div>`,
+    `<button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveStudent('${id||""}')">Save</button>`);
+}
+function saveStudent(id){
+  const school=currentSchool();
+  const data={id:$("#stId").value.trim()||uid("SW"),admission:$("#stAdm").value.trim(),firstName:$("#stFirst").value.trim(),middleName:$("#stMiddle").value.trim(),lastName:$("#stLast").value.trim(),gender:$("#stGender").value,dob:$("#stDob").value,classId:$("#stClass").value,parentName:$("#stParent").value.trim(),parentEmail:$("#stParentEmail").value.trim(),parentPhone:$("#stPhone").value.trim()};
+  data.name=[data.firstName,data.middleName,data.lastName].filter(Boolean).join(" ");
+  if(!data.name){ notify("Name required.","bad"); return; }
+  if(id){ Object.assign(DB.data.students.find(x=>x.id===id),data); }
+  else{ if(DB.data.students.some(s=>s.id===data.id)){ notify("ID exists.","bad"); return; } DB.data.students.push({schoolId:school.id,...data,archived:false,awaitingApproval:false,graduated:false}); }
+  DB.save(); closeModal(); renderStudents(); notify("Saved.","ok");
+}
+function archiveStudent(id){ const s=DB.data.students.find(x=>x.id===id); s.archived=true; DB.save(); renderStudents(); notify("Archived.","warn"); }
+window.studentForm=studentForm; window.saveStudent=saveStudent; window.archiveStudent=archiveStudent;
+
+function renderGradebook(){
+  const school=currentSchool();
+  const isTeacher=session.user.role==="teacher";
+  let classes = isTeacher
+    ? schoolClasses(school.id).filter(c=>DB.data.teacherAssignments.some(a=>a.teacherId===session.user.id && a.classId===c.id && a.role==="subject"))
+    : classesForCurrentUser();
+  const selClass=$("#gbClass")?.value || classes[0]?.id;
+  const selClassObj = DB.data.classes.find(c=>c.id===selClass);
+  const wing = selClassObj? selClassObj.wing : effectiveWing();
+  const assess = assessmentFor(wing);
+  const subjects = isTeacher ? schoolSubjects(school.id).filter(s=>teacherTeaches(session.user.id, selClass, s.id)) : schoolSubjects(school.id);
+  const years=DB.data.academicYears.filter(y=>y.schoolId===school.id);
+  const terms=DB.data.terms.filter(t=>t.schoolId===school.id);
+  const selSubject=$("#gbSubject")?.value || subjects[0]?.id;
+  const selYear=$("#gbYear")?.value || currentYear().id;
+  const selTerm=$("#gbTerm")?.value || effectiveTermId(wing, selClass);
+  const students=schoolStudents(school.id).filter(s=>s.classId===selClass);
+  const canEdit = ()=>{
+    if(session.user.role==="headteacher" || session.user.role==="superadmin") return true;
+    if(session.user.role!=="teacher") return false;
+    if(session.user.muted) return false;
+    return teacherTeaches(session.user.id, selClass, selSubject);
+  };
+  const rows=students.map(s=>{
+    const m=getMark(school.id,s.id,selSubject,selYear,selTerm);
+    const f=m?finalMark(m,assess):null;
+    const g=f!=null?gradeFor(f):{grade:"",desc:""};
+    return { s, m, f, g };
+  });
+  const editableNow = canEdit();
+  const classOptionLabel=(c)=>`[${c.wing==="primary"?"P":"S"}] ${c.name}`;
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Gradebook</h2>
+    <p>Midterm out of <b>${assess.midterm}</b> · End Term out of <b>${assess.endterm}</b>. Marks beyond the limit are <b>rejected</b>.</p></div></div>
+  ${isTeacher && session.user.muted?`<div class="alert bad">Your account is muted.</div>`:""}
+  ${isTeacher && !editableNow?`<div class="alert bad">You are not assigned as the subject teacher for this class &amp; subject.</div>`:""}
+  ${isTeacher? `<div class="alert info">Assigned to <b>${classes.length}</b> class(es): ${classes.map(c=>`<b>[${c.wing==="primary"?"P":"S"}] ${esc(c.name)}</b>`).join(", ")}</div>`:""}
+  <div class="toolbar">
+    <div class="field"><label>Year</label><select id="gbYear" onchange="renderGradebook()">${years.map(y=>`<option value="${y.id}" ${selYear===y.id?"selected":""}>${esc(y.name)}</option>`).join("")}</select></div>
+    <div class="field"><label>Term</label><select id="gbTerm" onchange="renderGradebook()">${terms.map(t=>`<option value="${t.id}" ${selTerm===t.id?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div>
+    <div class="field"><label>Class</label><select id="gbClass" onchange="renderGradebook()">${classes.map(c=>`<option value="${c.id}" ${selClass===c.id?"selected":""}>${esc(classOptionLabel(c))}</option>`).join("")}</select></div>
+    <div class="field"><label>Subject</label><select id="gbSubject" onchange="renderGradebook()">${subjects.map(s=>`<option value="${s.id}" ${selSubject===s.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div>
+    <button class="btn primary" onclick="saveGradebook()" ${!editableNow?"disabled":""}>💾 Save Marks</button>
+  </div>
+  ${students.length? `
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>#</th><th>Student ID</th><th>Name</th><th>Midterm (0–${assess.midterm})</th><th>End Term (0–${assess.endterm})</th><th>Final</th><th>Grade</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr data-sid="${r.s.id}">
+      <td class="num">${i+1}</td><td>${esc(r.s.id)}</td><td><strong>${esc(r.s.name)}</strong></td>
+      <td class="num"><input class="gb-mid" type="number" min="0" max="${assess.midterm}" value="${r.m?.midterm??""}" ${!editableNow?"disabled":""} style="width:80px;padding:6px;border:1.5px solid var(--line);border-radius:8px" /></td>
+      <td class="num"><input class="gb-end" type="number" min="0" max="${assess.endterm}" value="${r.m?.endterm??""}" ${!editableNow?"disabled":""} style="width:80px;padding:6px;border:1.5px solid var(--line);border-radius:8px" /></td>
+      <td class="num"><b>${r.f!=null?money(r.f):"—"}</b></td>
+      <td class="ctr"><span class="badge ${gradeClass(r.g.grade)}">${esc(r.g.grade)}</span></td>
+    </tr>`).join("")}</tbody>
+  </table></div>` : `<div class="empty">No students.</div>`}`;
+}
+function saveGradebook(){
+  const school=currentSchool();
+  const subjectId=$("#gbSubject").value, yearId=$("#gbYear").value, termId=$("#gbTerm").value, classId=$("#gbClass").value;
+  const wing=classWing(classId);
+  const assess=assessmentFor(wing);
+  if(session.user.role==="teacher" && !teacherTeaches(session.user.id,classId,subjectId)){ notify("Not assigned.","bad"); return; }
+  let count=0, rejected=0, skipped=0; const errors=[];
+  $$("#content table tbody tr").forEach(tr=>{
+    const sid=tr.dataset.sid;
+    const midI=tr.querySelector(".gb-mid"), endI=tr.querySelector(".gb-end");
+    if(midI.disabled || endI.disabled){ skipped++; return; }
+    const mid=midI.value, end=endI.value;
+    if(mid===""&&end==="") return;
+    const mv=mid===""?null:Number(mid), ev=end===""?null:Number(end);
+    if(mv!=null && (isNaN(mv)||mv<0||mv>assess.midterm)){ rejected++; errors.push(`${studentName(sid)}: Midterm ${mid} exceeds 0–${assess.midterm}`); return; }
+    if(ev!=null && (isNaN(ev)||ev<0||ev>assess.endterm)){ rejected++; errors.push(`${studentName(sid)}: End Term ${end} exceeds 0–${assess.endterm}`); return; }
+    const existing=getMark(school.id,sid,subjectId,yearId,termId);
+    if(existing){ existing.midterm=mv; existing.endterm=ev; }
+    else upsertMark(school.id,sid,subjectId,yearId,termId,mv,ev,session.user.id);
+    count++;
+  });
+  DB.save();
+  if(rejected){
+    openModal("Marks Rejected", `
+      <div class="alert bad">${rejected} mark(s) rejected.</div>
+      <ul style="margin-left:18px;font-size:13px;line-height:1.8">${errors.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>`,
+      `<button class="btn ghost" onclick="closeModal()">Close</button>`);
+  }
+  notify(`Saved ${count}.${rejected?" "+rejected+" rejected.":""}${skipped?" "+skipped+" not editable.":""}`, rejected?"warn":"ok");
+  renderGradebook();
+}
+window.saveGradebook=saveGradebook;
+
+function renderTeacherDash(){
+  const school=currentSchool();
+  const asg=DB.data.teacherAssignments.filter(a=>a.teacherId===session.user.id);
+  const subjectAsg=asg.filter(a=>a.role==="subject");
+  const homeroomCids=asg.filter(a=>a.role==="homeroom").map(a=>a.classId);
+  const classesIds=[...new Set(asg.map(a=>a.classId))];
+  const students=schoolStudents(school.id).filter(s=>classesIds.includes(s.classId));
+  const wings=teacherWings(session.user.id);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Welcome, ${esc(session.user.name)}</h2>
+    <p>You teach in: ${wings.map(w=>`<b>${esc(SCHOOL_CONFIG.wings[w].label)}</b>`).join(" & ")} · Working Term: <b>${esc(session.annualMode?"Annual":termName(effectiveTermId(effectiveWing(),null)))}</b></p></div></div>
+  <div class="cards">
+    <div class="card stat"><div class="ic blue">🏫</div><div><b>${classesIds.length}</b><small>Classes</small></div></div>
+    <div class="card stat"><div class="ic gold">📚</div><div><b>${subjectAsg.length}</b><small>Subjects I teach</small></div></div>
+    <div class="card stat"><div class="ic purple">🏠</div><div><b>${homeroomCids.length}</b><small>Homeroom</small></div></div>
+    <div class="card stat"><div class="ic green">🎓</div><div><b>${students.length}</b><small>Students</small></div></div>
+  </div>
+  <div class="panel mt3"><div class="ph"><h3>My Assignments</h3></div><div class="pb">
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Wing</th><th>Class</th><th>Subject</th><th>Role</th></tr></thead>
+      <tbody>${asg.map(a=>`<tr>
+        <td><span class="wing-badge ${classWing(a.classId)}">${esc(SCHOOL_CONFIG.wings[classWing(a.classId)].label)}</span></td>
+        <td>${esc(className(a.classId))}</td>
+        <td>${a.role==="homeroom"?`<span class="muted">—</span>`:esc(subjectName(a.subjectId))}</td>
+        <td>${a.role==="homeroom"?`<span class="pill purple">Homeroom</span>`:`<span class="pill grey">Subject</span>`}</td>
+      </tr>`).join("")}</tbody>
+    </table></div>
+  </div></div>`;
+}
+function renderHomeroomDuties(){
+  const school=currentSchool();
+  const cids=homeroomClassIds(session.user.id);
+  if(!cids.length){ $("#content").innerHTML=`<div class="page-head"><div><h2>Homeroom Duties</h2><p>You are not a Homeroom Teacher.</p></div></div>`; return; }
+  const students=schoolStudents(school.id).filter(s=>cids.includes(s.classId));
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Homeroom Duties</h2></div>
+    <button class="btn green" onclick="navigate('tprint')">🖨 Print All Class Reports</button></div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Wing</th><th>Actions</th></tr></thead>
+    <tbody>${students.map(s=>`<tr><td>${esc(s.id)}</td><td><strong>${esc(s.name)}</strong></td><td>${esc(className(s.classId))}</td>
+      <td><span class="wing-badge ${classWing(s.classId)}">${esc(SCHOOL_CONFIG.wings[classWing(s.classId)].label)}</span></td>
+      <td><button class="btn primary sm" onclick="renderHomeroomStudent('${s.id}')">Remarks & Character</button>
+          <button class="btn ghost sm" onclick="viewReport('${s.id}')">Preview</button></td></tr>`).join("")}</tbody>
+  </table></div>`;
+}
+function renderHomeroomStudent(studentId){
+  const school=currentSchool();
+  const s=DB.data.students.find(x=>x.id===studentId);
+  if(!s){ notify("Not found","bad"); return; }
+  if(!isHomeroomOfClass(session.user.id,s.classId) && session.user.role==="teacher"){ notify("Not your homeroom.","bad"); return; }
+  const year=currentYear(), term=currentTermForClass(s.classId);
+  let info=DB.data.reportInfo.find(r=>r.schoolId===school.id&&r.studentId===s.id&&r.yearId===year.id&&r.termId===term.id);
+  if(!info){ info={id:uid("ri"),schoolId:school.id,studentId:s.id,yearId:year.id,termId:term.id,homeroomComment:"",subjectComments:{}}; DB.data.reportInfo.push(info); DB.save(); }
+  let cd=DB.data.conduct.find(c=>c.schoolId===school.id&&c.studentId===s.id&&c.yearId===year.id&&c.termId===term.id);
+  if(!cd){ cd={id:uid("cd"),schoolId:school.id,studentId:s.id,yearId:year.id,termId:term.id,daysAbsent:"",cleanliness:"",attentiveness:"",friendliness:"",respectful:"",leadership:""}; DB.data.conduct.push(cd); DB.save(); }
+  const hm=homeroomTeacher(s.classId);
+  $("#content").innerHTML = `
+    <div class="page-head"><div><h2>Remarks & Character — ${esc(s.name)}</h2><p>${esc(className(s.classId))} · ${esc(term.name)}</p></div>
+      <button class="btn ghost" onclick="navigate('thomeroom')">← Back</button></div>
+    <div class="panel"><div class="ph"><h3>REMARKS</h3></div><div class="pb">
+      <textarea id="hrComment" rows="4" spellcheck="true" lang="en" style="width:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px" oninput="autoGrow(this)">${esc(info.homeroomComment||"")}</textarea>
+      <div class="small muted mt1">English spelling auto-correct is enabled. Swahili and other languages are not checked.</div>
+      <button class="btn primary mt2" onclick="saveHomeroomComment('${s.id}')">Save Remarks</button>
+    </div></div>
+    <div class="panel"><div class="ph"><h3>CHARACTER / CONDUCT</h3></div><div class="pb">
+      <div class="form-grid">
+        <div><label>Days Absent</label><input id="cdDays" type="number" min="0" value="${esc(cd.daysAbsent)}" /></div>
+        <div><label>Cleanliness</label><input id="cdClean" value="${esc(cd.cleanliness)}" /></div>
+        <div><label>Attentiveness</label><input id="cdAtt" value="${esc(cd.attentiveness)}" /></div>
+        <div><label>Friendliness</label><input id="cdFriend" value="${esc(cd.friendliness)}" /></div>
+        <div><label>Respectful</label><input id="cdResp" value="${esc(cd.respectful)}" /></div>
+        <div><label>Leadership</label><input id="cdLead" value="${esc(cd.leadership)}" /></div>
+      </div>
+      <button class="btn primary mt2" onclick="saveConduct('${s.id}')">Save Character</button>
+    </div></div>
+    <div class="panel"><div class="ph"><h3>Homeroom Signature</h3></div><div class="pb">
+      ${hm&&hm.signature?`<div class="sig-pad has-sig"><img src="${esc(hm.signature)}" /></div>`:`<div class="alert warn">No signature attached.</div>`}
+      ${hm?`<button class="btn green mt2" onclick="signatureForm('${hm.id}')">✍ Manage Signature</button>`:""}
+    </div></div>`;
+  const ta = $("#hrComment");
+  if(ta) autoGrow(ta);
+}
+window.renderHomeroomStudent=renderHomeroomStudent;
+
+function autoGrow(el){
+  if(!el) return;
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 400) + "px";
+  el.style.overflowY = el.scrollHeight > 400 ? "auto" : "hidden";
+}
+window.autoGrow = autoGrow;
+
+function saveHomeroomComment(sid){
+  const school=currentSchool(), year=currentYear(), term=currentTermForClass(DB.data.students.find(x=>x.id===sid).classId);
+  const info=DB.data.reportInfo.find(r=>r.schoolId===school.id&&r.studentId===sid&&r.yearId===year.id&&r.termId===term.id);
+  info.homeroomComment=$("#hrComment").value.trim();
+  DB.save(); notify("Saved.","ok");
+}
+function saveConduct(sid){
+  const school=currentSchool(), year=currentYear(), term=currentTermForClass(DB.data.students.find(x=>x.id===sid).classId);
+  const cd=DB.data.conduct.find(c=>c.schoolId===school.id&&c.studentId===sid&&c.yearId===year.id&&c.termId===term.id);
+  cd.daysAbsent=$("#cdDays").value===""?"":+$("#cdDays").value;
+  cd.cleanliness=$("#cdClean").value.trim();
+  cd.attentiveness=$("#cdAtt").value.trim();
+  cd.friendliness=$("#cdFriend").value.trim();
+  cd.respectful=$("#cdResp").value.trim();
+  cd.leadership=$("#cdLead").value.trim();
+  DB.save(); notify("Saved.","ok");
+}
+window.saveHomeroomComment=saveHomeroomComment; window.saveConduct=saveConduct;
+
+function renderTeacherClassAnalysis(){
+  const school=currentSchool();
+  const cids=homeroomClassIds(session.user.id);
+  if(!cids.length){
+    const subjCids=[...new Set(DB.data.teacherAssignments.filter(a=>a.teacherId===session.user.id && a.role==="subject").map(a=>a.classId))];
+    if(!subjCids.length){ $("#content").innerHTML=`<div class="page-head"><div><h2>My Class Analysis</h2><p>No classes.</p></div></div>`; return; }
+    cids.push(...subjCids);
+  }
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>My Class Analysis</h2><p>${esc(session.annualMode?"Annual":termName(effectiveTermId(effectiveWing(),null)))}</p></div></div>
+  <div id="tcaBody"></div>`;
+  renderClassAnalysisBody(cids,"tcaBody");
+}
+window.renderTeacherClassAnalysis=renderTeacherClassAnalysis;
+
+function renderAnalysisHub(scope){
+  const body= scope==="superadmin"? "Both wings" : "Your wing";
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Analysis Hub</h2><p>${body} · ${esc(session.annualMode?"Annual":termName(effectiveTermId(effectiveWing(),null)))}</p></div></div>
+  <div class="cards">
+    <div class="card"><h3 style="color:var(--green);margin-bottom:10px">📊 Class Analysis</h3><p class="small muted mb2">Performance by class.</p><button class="btn primary" onclick="renderClassAnalysis()">Open</button></div>
+    <div class="card"><h3 style="color:var(--green);margin-bottom:10px">🏆 Best Performers</h3><p class="small muted mb2">Top learners.</p><button class="btn primary" onclick="renderBest()">Open</button></div>
+    <div class="card"><h3 style="color:var(--green);margin-bottom:10px">⚠️ Struggling Learners</h3><p class="small muted mb2">Below Grade C.</p><button class="btn primary" onclick="renderStruggling()">Open</button></div>
+    <div class="card"><h3 style="color:var(--green);margin-bottom:10px">📅 Annual Analysis</h3><p class="small muted mb2">Term 1 + 2 + 3.</p><button class="btn primary" onclick="renderAnnual()">Open</button></div>
+  </div>`;
+}
+window.renderAnalysisHub=renderAnalysisHub;
+
+function renderClassAnalysis(){
+  const classes=classesForCurrentUser();
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Class Analysis</h2><p>${esc(session.annualMode?"Annual":termName(effectiveTermId(effectiveWing(),null)))}</p></div>
+    <button class="btn green" onclick="printAnalysisReport('class')">🖨 Print Analysis</button></div>
+  <div id="caBody"></div>`;
+  renderClassAnalysisBody(classes.map(c=>c.id),"caBody");
+}
+window.renderClassAnalysis=renderClassAnalysis;
+
+function renderClassAnalysisBody(classIds, containerId){
+  const school=currentSchool(), yearId=currentYear().id;
+  const students=schoolStudents(school.id).filter(s=>classIds.includes(s.classId));
+  const mode = session.annualMode ? "annual" : "term";
+  const computeAvg=(sid)=>{
+    const sidWing = classWing(DB.data.students.find(x=>x.id===sid).classId);
+    const assess = assessmentFor(sidWing);
+    if(mode==="annual"){
+      const terms=DB.data.terms.filter(t=>t.schoolId===school.id);
+      const per=terms.map(t=>{
+        const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===sid&&m.termId===t.id);
+        return ms.length? ms.reduce((a,m)=>a+(finalMark(m,assess)||0),0)/ms.length : null;
+      }).filter(v=>v!=null);
+      return per.length? per.reduce((a,b)=>a+b,0)/per.length : null;
+    }
+    const termId = classIds.length ? effectiveTermId(classWing(classIds[0]), classIds[0]) : effectiveTermId(effectiveWing(), null);
+    const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===sid&&m.yearId===yearId&&m.termId===termId);
+    return ms.length? ms.reduce((a,m)=>a+(finalMark(m,assess)||0),0)/ms.length : null;
+  };
+  const rows=students.map(s=>({ s, avg:computeAvg(s.id) })).filter(r=>r.avg!=null).sort((a,b)=>b.avg-a.avg);
+  const avg=rows.length? rows.reduce((a,r)=>a+r.avg,0)/rows.length : 0;
+  const dist={}; APP.grading.forEach(g=>dist[g.grade]=0);
+  rows.forEach(r=>{ const g=gradeFor(r.avg).grade; dist[g]=(dist[g]||0)+1; });
+  const struggling=rows.filter(r=>isStruggling(r.avg)).length;
+  $("#"+containerId).innerHTML = `
+  <div class="cards">
+    <div class="card stat"><div class="ic blue">👥</div><div><b>${rows.length}</b><small>Students</small></div></div>
+    <div class="card stat"><div class="ic green">📈</div><div><b>${money(avg)}%</b><small>Average</small></div></div>
+    <div class="card stat"><div class="ic gold">🏆</div><div><b>${rows[0]?money(rows[0].avg)+"%":"—"}</b><small>Highest</small></div></div>
+    <div class="card stat"><div class="ic red">⚠️</div><div><b>${struggling}</b><small>Struggling</small></div></div>
+  </div>
+  <div class="grid2 mt3">
+    <div class="panel"><div class="ph"><h3>Grade Distribution</h3></div><div class="pb">
+      ${Object.entries(dist).map(([g,n])=>`<div class="row between small" style="padding:4px 0"><span class="badge ${gradeClass(g)}">${g}</span><span>${n}</span></div>
+        <div class="bar mb2"><span style="width:${rows.length?(n/rows.length*100):0}%;background:linear-gradient(90deg,#0a8f3c,#07702e)"></span></div>`).join("")}
+    </div></div>
+    <div class="panel"><div class="ph"><h3>Ranking</h3></div><div class="pb">
+      ${rows.map((r,i)=>`<div class="row between small" style="padding:5px 0;border-bottom:1px solid var(--line)"><span><b>${i+1}.</b> ${esc(r.s.name)} <span class="muted">(${esc(className(r.s.classId))})</span></span><b>${money(r.avg)}%</b></div>`).join("")||`<div class="empty">No marks.</div>`}
+    </div></div>
+  </div>`;
+}
+function renderBest(){
+  const wing=effectiveWing(), school=currentSchool(), yearId=currentYear().id, assess=assessmentFor(wing);
+  const classes=classesForCurrentUser(), subjects=schoolSubjects(school.id);
+  const mode=session.annualMode?"annual":"term";
+  const termId=effectiveTermId(wing,null);
+  const computeAvg=(sid)=>{
+    const sidWing = classWing(DB.data.students.find(x=>x.id===sid).classId);
+    const sidAssess = assessmentFor(sidWing);
+    if(mode==="annual"){
+      const terms=DB.data.terms.filter(t=>t.schoolId===school.id);
+      const per=terms.map(t=>{
+        const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===sid&&m.termId===t.id);
+        return ms.length? ms.reduce((a,m)=>a+(finalMark(m,sidAssess)||0),0)/ms.length : null;
+      }).filter(v=>v!=null);
+      return per.length? per.reduce((a,b)=>a+b,0)/per.length : null;
+    }
+    const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===sid&&m.yearId===yearId&&m.termId===termId);
+    return ms.length? ms.reduce((a,m)=>a+(finalMark(m,sidAssess)||0),0)/ms.length : null;
+  };
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Best Performers</h2><p>${esc(mode==="annual"?"Annual":termName(termId))}</p></div>
+    <button class="btn green" onclick="printAnalysisReport('best')">🖨 Print</button></div>
+  <div id="bestBody"></div>`;
+  $("#bestBody").innerHTML = classes.map(c=>{
+    const cAssess = assessmentFor(c.wing);
+    const list=schoolStudents(school.id).filter(s=>s.classId===c.id);
+    const overall=list.map(s=>({ s, avg:computeAvg(s.id) })).filter(r=>r.avg!=null).sort((a,b)=>b.avg-a.avg);
+    const bySub=subjects.map(sub=>{
+      const best=list.map(s=>{
+        const m=DB.data.marks.find(m=>m.schoolId===school.id&&m.studentId===s.id&&m.subjectId===sub.id&&m.termId===termId);
+        return m?{ s, f:finalMark(m,cAssess) }:null;
+      }).filter(Boolean).sort((a,b)=>b.f-a.f)[0];
+      return { sub, best };
+    });
+    return `<div class="panel"><div class="ph"><h3>${esc(c.name)} <span class="muted small">(${esc(SCHOOL_CONFIG.wings[c.wing].label)})</span></h3></div><div class="pb">
+      ${overall[0]?`<div class="row between"><strong>🏆 ${esc(overall[0].s.name)}</strong><b>${money(overall[0].avg)}%</b></div>`:`<div class="empty">No marks.</div>`}
+      <div class="tbl-wrap mt2"><table class="tbl"><thead><tr><th>Subject</th><th>Best</th><th>Score</th></tr></thead>
+        <tbody>${bySub.map(x=>`<tr><td>${esc(x.sub.name)}</td><td>${x.best?esc(x.best.s.name):"—"}</td><td class="num">${x.best?money(x.best.f):"—"}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </div></div>`;
+  }).join("") || `<div class="empty">No classes.</div>`;
+}
+window.renderBest=renderBest;
+
+function renderStruggling(){
+  const wing=effectiveWing(), school=currentSchool(), yearId=currentYear().id, termId=effectiveTermId(wing,null);
+  const classes=classesForCurrentUser(), cids=classes.map(c=>c.id);
+  const students=schoolStudents(school.id).filter(s=>cids.includes(s.classId));
+  const subjects=schoolSubjects(school.id);
+  const rows=students.map(s=>{
+    const sAssess = assessmentFor(classWing(s.classId));
+    const weak=[];
+    subjects.forEach(sub=>{
+      const m=getMark(school.id,s.id,sub.id,yearId,termId);
+      if(m){ const f=finalMark(m,sAssess); if(isStruggling(f)) weak.push({ sub:sub.name, score:f, grade:gradeFor(f).grade }); }
+    });
+    const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===s.id&&m.yearId===yearId&&m.termId===termId);
+    const avg=ms.length?ms.reduce((a,m)=>a+(finalMark(m,sAssess)||0),0)/ms.length:null;
+    return { s, weak, avg };
+  }).filter(r=>r.weak.length>0).sort((a,b)=>b.weak.length-a.weak.length);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Struggling Learners</h2><p>D, E, U = struggling.</p></div>
+    <button class="btn green" onclick="printAnalysisReport('struggle')">🖨 Print</button></div>
+  ${rows.length? `<div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Student</th><th>Class</th><th>#</th><th>Subjects</th><th>Average</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td><strong>${esc(r.s.name)}</strong></td><td>${esc(className(r.s.classId))}</td>
+      <td class="num"><span class="pill red">${r.weak.length}</span></td>
+      <td class="small">${r.weak.map(w=>`${esc(w.sub)} <span class="badge ${gradeClass(w.grade)}">${w.grade}</span>`).join("<br/>")}</td>
+      <td class="num">${r.avg!=null?money(r.avg)+"%":"—"}</td></tr>`).join("")}</tbody>
+  </table></div>` : `<div class="empty"><div class="big">✅</div>No struggling learners.</div>`}`;
+}
+window.renderStruggling=renderStruggling;
+
+function renderAnnual(){
+  const wing=effectiveWing(), school=currentSchool();
+  const classes=classesForCurrentUser(), yearId=currentYear().id;
+  const terms=DB.data.terms.filter(t=>t.schoolId===school.id).slice(0,3);
+  const term3=terms[2]||terms[terms.length-1];
+  const allStudents=schoolStudents(school.id).filter(s=>classes.map(c=>c.id).includes(s.classId));
+  const rows=allStudents.map(s=>{
+    const sAssess = assessmentFor(classWing(s.classId));
+    const termAvgs=terms.map(t=>{
+      const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===s.id&&m.termId===t.id);
+      return ms.length? ms.reduce((a,m)=>a+(finalMark(m,sAssess)||0),0)/ms.length : null;
+    });
+    const valid=termAvgs.filter(v=>v!=null);
+    const annual=valid.length? valid.reduce((a,b)=>a+b,0)/valid.length : null;
+    const t3=termAvgs[2]!=null?termAvgs[2]:null;
+    let trend="no-data";
+    if(termAvgs[0]!=null&&termAvgs[2]!=null){
+      if(termAvgs[2]>termAvgs[0]+2) trend="improved";
+      else if(termAvgs[2]<termAvgs[0]-2) trend="declined";
+      else trend="stable";
+    }
+    return { s, termAvgs, annual, t3, trend };
+  }).filter(r=>r.annual!=null).sort((a,b)=>b.annual-a.annual);
+  const best=rows[0];
+  const mostImproved=[...rows].filter(r=>r.trend==="improved").sort((a,b)=>(b.termAvgs[2]-b.termAvgs[0])-(a.termAvgs[2]-a.termAvgs[0]))[0];
+  const declining=rows.filter(r=>r.trend==="declined");
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Annual Analysis — ${esc(yearName(yearId))}</h2></div>
+    <button class="btn green" onclick="printAnalysisReport('annual')">🖨 Print Annual</button></div>
+  <div class="cards">
+    <div class="card stat"><div class="ic green">📅</div><div><b>${rows.length}</b><small>Learners</small></div></div>
+    <div class="card stat"><div class="ic gold">🏆</div><div><b>${best?esc(best.s.name):"—"}</b><small>Best of Year</small></div></div>
+    <div class="card stat"><div class="ic blue">📈</div><div><b>${mostImproved?esc(mostImproved.s.name):"—"}</b><small>Most Improved</small></div></div>
+    <div class="card stat"><div class="ic red">📉</div><div><b>${declining.length}</b><small>Not Improving</small></div></div>
+  </div>
+  <div class="panel mt3"><div class="ph"><h3>Term 3 Individual</h3></div><div class="pb">
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>#</th><th>Student</th><th>Class</th><th>${term3?esc(term3.name):"Term 3"}</th><th>Grade</th></tr></thead>
+      <tbody>${rows.filter(r=>r.t3!=null).sort((a,b)=>b.t3-a.t3).map((r,i)=>`<tr><td class="num">${i+1}</td><td>${esc(r.s.name)}</td><td>${esc(className(r.s.classId))}</td>
+        <td class="num"><b>${money(r.t3)}%</b></td><td class="ctr"><span class="badge ${gradeClass(gradeFor(r.t3).grade)}">${gradeFor(r.t3).grade}</span></td></tr>`).join("")}</tbody>
+    </table></div>
+  </div></div>
+  <div class="panel"><div class="ph"><h3>Whole Year Performance</h3></div><div class="pb">
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>#</th><th>Student</th><th>Class</th>${terms.map(t=>`<th>${esc(t.name)}</th>`).join("")}<th>Annual</th><th>Grade</th><th>Trend</th></tr></thead>
+      <tbody>${rows.map((r,i)=>`<tr><td class="num">${i+1}</td><td><strong>${esc(r.s.name)}</strong></td><td>${esc(className(r.s.classId))}</td>
+        ${r.termAvgs.map(v=>`<td class="num">${v!=null?money(v)+"%":"—"}</td>`).join("")}
+        <td class="num"><b>${money(r.annual)}%</b></td>
+        <td class="ctr"><span class="badge ${gradeClass(gradeFor(r.annual).grade)}">${gradeFor(r.annual).grade}</span></td>
+        <td class="ctr">${r.trend==="improved"?`<span class="pill green">Improved</span>`:r.trend==="declined"?`<span class="pill red">Not improving</span>`:r.trend==="stable"?`<span class="pill blue">Stable</span>`:`—`}</td></tr>`).join("")}</tbody>
+    </table></div>
+  </div></div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Most Improved</h3></div><div class="pb">
+      ${rows.filter(r=>r.trend==="improved").map(r=>`<div class="row between small" style="padding:5px 0"><span>${esc(r.s.name)}</span><b>${money(r.termAvgs[0])}% → ${money(r.termAvgs[2])}%</b></div>`).join("")||`<div class="empty">None.</div>`}
+    </div></div>
+    <div class="panel"><div class="ph"><h3>Not Improving</h3></div><div class="pb">
+      ${declining.map(r=>`<div class="row between small" style="padding:5px 0"><span>${esc(r.s.name)}</span><b>${money(r.termAvgs[0])}% → ${money(r.termAvgs[2])}%</b></div>`).join("")||`<div class="empty">None.</div>`}
+    </div></div>
+  </div>`;
+}
+window.renderAnnual=renderAnnual;
+
+function printAnalysisReport(kind){
+  const school=currentSchool(), wing=effectiveWing(), assess=assessmentFor(wing), yearId=currentYear().id;
+  const termId=effectiveTermId(wing,null);
+  const classes=classesForCurrentUser(), cids=classes.map(c=>c.id);
+  const students=schoolStudents(school.id).filter(s=>cids.includes(s.classId));
+  const subjects=schoolSubjects(school.id);
+  const wingCfg=SCHOOL_CONFIG.wings[wing];
+  const dateStr=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  let bodyHtml="";
+  if(kind==="class"){
+    bodyHtml=classes.map(c=>{
+      const cAssess = assessmentFor(c.wing);
+      const list=students.filter(s=>s.classId===c.id);
+      const rows=list.map(s=>{
+        const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===s.id&&m.yearId===yearId&&m.termId===termId);
+        const avg=ms.length?ms.reduce((a,m)=>a+(finalMark(m,cAssess)||0),0)/ms.length:null;
+        return { s, avg };
+      }).filter(r=>r.avg!=null).sort((a,b)=>b.avg-a.avg);
+      const cavg=rows.length?rows.reduce((a,r)=>a+r.avg,0)/rows.length:0;
+      return `<h3 style="margin-top:6mm">${esc(c.name)} — Avg ${money(cavg)}% (${rows.length})</h3>
+        <table class="rp-subjects"><thead><tr><th>#</th><th>Student</th><th>Average</th><th>Grade</th></tr></thead>
+        <tbody>${rows.map((r,i)=>`<tr><td class="ctr">${i+1}</td><td>${esc(r.s.name)}</td><td class="ctr">${money(r.avg)}%</td><td class="ctr">${gradeFor(r.avg).grade}</td></tr>`).join("")}</tbody></table>`;
+    }).join("");
+  }
+  if(kind==="best"){
+    bodyHtml=classes.map(c=>{
+      const cAssess = assessmentFor(c.wing);
+      const list=students.filter(s=>s.classId===c.id);
+      const bySub=subjects.map(sub=>{
+        const best=list.map(s=>{
+          const m=DB.data.marks.find(m=>m.schoolId===school.id&&m.studentId===s.id&&m.subjectId===sub.id&&m.termId===termId);
+          return m?{ s, f:finalMark(m,cAssess) }:null;
+        }).filter(Boolean).sort((a,b)=>b.f-a.f)[0];
+        return { sub, best };
+      });
+      return `<h3 style="margin-top:6mm">${esc(c.name)}</h3>
+        <table class="rp-subjects"><thead><tr><th>Subject</th><th>Best Performer</th><th>Score</th></tr></thead>
+        <tbody>${bySub.map(x=>`<tr><td>${esc(x.sub.name)}</td><td>${x.best?esc(x.best.s.name):"—"}</td><td class="ctr">${x.best?money(x.best.f):"—"}</td></tr>`).join("")}</tbody></table>`;
+    }).join("");
+  }
+  if(kind==="struggle"){
+    const rows=students.map(s=>{
+      const sAssess = assessmentFor(classWing(s.classId));
+      const weak=[];
+      subjects.forEach(sub=>{
+        const m=getMark(school.id,s.id,sub.id,yearId,termId);
+        if(m){ const f=finalMark(m,sAssess); if(isStruggling(f)) weak.push(sub.name+" ("+gradeFor(f).grade+")"); }
+      });
+      return { s, weak };
+    }).filter(r=>r.weak.length>0).sort((a,b)=>b.weak.length-a.weak.length);
+    bodyHtml=`<table class="rp-subjects"><thead><tr><th>#</th><th>Student</th><th>Class</th><th>#</th><th>Subjects</th></tr></thead>
+      <tbody>${rows.map((r,i)=>`<tr><td class="ctr">${i+1}</td><td>${esc(r.s.name)}</td><td>${esc(className(r.s.classId))}</td><td class="ctr">${r.weak.length}</td><td>${esc(r.weak.join(", "))}</td></tr>`).join("")}</tbody></table>`;
+  }
+  if(kind==="annual"){
+    const terms=DB.data.terms.filter(t=>t.schoolId===school.id).slice(0,3);
+    bodyHtml=classes.map(c=>{
+      const cAssess = assessmentFor(c.wing);
+      const list=students.filter(s=>s.classId===c.id);
+      const rows=list.map(s=>{
+        const termAvgs=terms.map(t=>{
+          const ms=DB.data.marks.filter(m=>m.schoolId===school.id&&m.studentId===s.id&&m.termId===t.id);
+          return ms.length?ms.reduce((a,m)=>a+(finalMark(m,cAssess)||0),0)/ms.length:null;
+        });
+        const valid=termAvgs.filter(v=>v!=null);
+        const annual=valid.length?valid.reduce((a,b)=>a+b,0)/valid.length:null;
+        return { s, termAvgs, annual };
+      }).filter(r=>r.annual!=null).sort((a,b)=>b.annual-a.annual);
+      return `<h3 style="margin-top:6mm">${esc(c.name)} — Annual</h3>
+        <table class="rp-subjects"><thead><tr><th>#</th><th>Student</th>${terms.map(t=>`<th>${esc(t.name)}</th>`).join("")}<th>Annual</th><th>Grade</th></tr></thead>
+        <tbody>${rows.map((r,i)=>`<tr><td class="ctr">${i+1}</td><td>${esc(r.s.name)}</td>${r.termAvgs.map(v=>`<td class="ctr">${v!=null?money(v)+"%":"—"}</td>`).join("")}<td class="ctr"><b>${money(r.annual)}%</b></td><td class="ctr">${gradeFor(r.annual).grade}</td></tr>`).join("")}</tbody></table>`;
+    }).join("");
+  }
+  const html=`
+  <div class="a4-report">
+    <div class="rp-top">
+      <div class="logo-left">${SCHOOL_CONFIG.schoolLogo?`<img src="${esc(SCHOOL_CONFIG.schoolLogo)}" />`:"<span>TS</span>"}</div>
+      <div class="title-block"><h1>ANALYSIS REPORT</h1></div>
+      <div class="logo-right">${SCHOOL_CONFIG.secondaryLogo?`<img src="${esc(SCHOOL_CONFIG.secondaryLogo)}" />`:""}</div>
+    </div>
+    <div class="rp-info-row">
+      <div class="rp-info-left">
+        <div class="line"><span class="lbl">School:</span><span class="val">${esc(SCHOOL_CONFIG.schoolName)} – ${esc(SCHOOL_CONFIG.academyName)}</span></div>
+        <div class="line"><span class="lbl">Wing:</span><span class="val">${session.user.role==="superadmin" && !session.wing ? "Both Wings" : esc(wingCfg.label)}</span></div>
+      </div>
+      <div class="rp-info-right">
+        <div class="line"><span class="lbl">Type:</span><span class="val">${esc(kind.toUpperCase())}</span></div>
+        <div class="line"><span class="lbl">Term:</span><span class="val">${esc(session.annualMode?"Annual":termName(termId))}</span></div>
+        <div class="line"><span class="lbl">Date:</span><span class="val">${esc(dateStr)}</span></div>
+      </div>
+    </div>
+    <div class="rp-body">
+      <div class="rp-vertical-panel"><div class="vtext">${esc(SCHOOL_CONFIG.schoolName)}&nbsp;&nbsp;${esc(SCHOOL_CONFIG.academyName)}</div></div>
+      <div class="rp-content" style="padding:4mm">
+        ${bodyHtml}
+        <div style="margin-top:8mm;border-top:1px solid #000;padding-top:3mm;font-size:9pt">
+          Prepared by: <b>${esc(session.user.name)}</b> · Developed by Rasul A. Mngazija
+        </div>
+      </div>
+    </div>
+    <div class="rp-footer-logos">${(SCHOOL_CONFIG.footerLogos||[]).map(l=>`<div class="flogo">${l.src?`<img src="${esc(l.src)}" />`:""}</div>`).join("")}</div>
+  </div>`;
+  $("#reportPrintArea").innerHTML=html;
+  $("#reportPrintArea").classList.remove("hidden");
+  setTimeout(()=>{ autoScaleReport(); window.print(); }, 400);
+}
+window.printAnalysisReport=printAnalysisReport;
+
+function renderPromotion(){
+  const school=currentSchool();
+  const wing = session.user.role==="headteacher" ? session.user.wing : (session.user.role==="superadmin" && session.wing ? session.wing : null);
+  let classes = schoolClasses(school.id, wing);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Promotion</h2><p>${wing? esc(SCHOOL_CONFIG.wings[wing].label) : "Both wings"} · Year 6 → Secondary (pending approval). Year 13 → Graduated.</p></div></div>
+  <div class="alert info">Year 6 learners move to <b>Year 7</b> but stay <b>Awaiting approval</b>. Year 13 learners are marked <b>Graduated</b>.</div>
+  <div class="row mb2">
+    ${!wing ? `
+      <button class="btn primary" onclick="promoteWholeWing('primary')">⬆ Promote Primary Wing</button>
+      <button class="btn primary" onclick="promoteWholeWing('secondary')">⬆ Promote Secondary Wing</button>
+      <button class="btn green" onclick="promoteWholeWing('all')">⬆ Promote Both Wings</button>
+    ` : `<button class="btn primary" onclick="promoteWholeWing('${wing}')">⬆ Promote Whole ${esc(SCHOOL_CONFIG.wings[wing].label)}</button>`}
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Class</th><th>Wing</th><th>Students</th><th>Next Class</th></tr></thead>
+    <tbody>${classes.map(c=>{
+      const count=schoolStudents(school.id).filter(s=>s.classId===c.id).length;
+      const next=APP.nextClass(c.base||c.name);
+      return `<tr><td><strong>${esc(c.name)}</strong></td>
+        <td><span class="wing-badge ${c.wing}">${esc(SCHOOL_CONFIG.wings[c.wing].label)}</span></td>
+        <td class="num">${count}</td>
+        <td>${next==="GRADUATED"?`<span class="pill purple">Graduated</span>`:esc(next||"—")}</td></tr>`;
+    }).join("")}</tbody>
+  </table></div>`;
+}
+function promoteWholeWing(wing){
+  if(!wing) wing = session.user.role==="headteacher" ? session.user.wing : (session.wing||"primary");
+  const school=currentSchool();
+  let promoted=0, awaiting=0, graduated=0;
+  DB.data.students.filter(s=>s.schoolId===school.id && !s.archived).forEach(s=>{
+    const c=DB.data.classes.find(x=>x.id===s.classId);
+    if(!c) return;
+    if(wing!=="all" && c.wing!==wing) return;
+    const nextName=APP.nextClass(c.base||c.name);
+    if(nextName==="GRADUATED"){ s.graduated=true; s.classId=""; graduated++; return; }
+    const sameStream=DB.data.classes.find(x=>x.name===(c.stream? nextName+" "+c.stream : nextName));
+    const nextClass = sameStream || DB.data.classes.find(x=>x.base===nextName || x.name===nextName);
+    if(!nextClass) return;
+    s.classId=nextClass.id;
+    if((c.base||"").trim()==="Year 6"){ s.awaitingApproval=true; awaiting++; }
+    promoted++;
+  });
+  audit("Promoted wing(s)", wing);
+  DB.save(); renderPromotion();
+  notify(`Promoted ${promoted} (${awaiting} awaiting approval), ${graduated} graduated.`,"ok");
+}
+window.promoteWholeWing=promoteWholeWing;
+
+function renderApprovals(){
+  const school=currentSchool();
+  const pending=DB.data.students.filter(s=>s.schoolId===school.id && s.awaitingApproval && !s.archived);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Pending Approvals</h2></div></div>
+  ${pending.length?`<div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Action</th></tr></thead>
+    <tbody>${pending.map(s=>`<tr><td>${esc(s.id)}</td><td>${esc(s.name)}</td><td>${esc(className(s.classId))}</td>
+      <td><button class="btn primary sm" onclick="approveStudent('${s.id}')">Approve into Secondary</button></td></tr>`).join("")}</tbody>
+  </table></div>`:`<div class="empty">No pending approvals.</div>`}`;
+}
+function approveStudent(id){ const s=DB.data.students.find(x=>x.id===id); s.awaitingApproval=false; DB.save(); renderApprovals(); notify(s.name+" approved.","ok"); }
+window.renderApprovals=renderApprovals; window.approveStudent=approveStudent;
+
+function renderWingTermSettings(){
+  const wing = session.user.role==="headteacher" ? session.user.wing : (session.user.role==="superadmin" && session.wing ? session.wing : "primary");
+  const terms=DB.data.terms.filter(t=>t.schoolId===currentSchool().id);
+  const current=effectiveTermId(wing,null);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Set Wing Term</h2><p>${esc(SCHOOL_CONFIG.wings[wing].label)}</p></div></div>
+  <div class="panel"><div class="pb">
+    <div class="form-grid">
+      <div class="full"><label>Current Term for the Wing</label>
+        <select id="wtTerm">${terms.map(t=>`<option value="${t.id}" ${current===t.id?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div>
+    </div>
+    <button class="btn primary mt2" onclick="saveWingTerm()">Save</button>
+  </div></div>`;
+}
+function saveWingTerm(){
+  const wing = session.user.role==="headteacher" ? session.user.wing : (session.user.role==="superadmin" && session.wing ? session.wing : "primary");
+  const tid=$("#wtTerm").value;
+  const s=DB.data.settings[currentSchool().id];
+  if(!s.wingTerms) s.wingTerms={};
+  s.wingTerms[wing]={ currentTermId:tid };
+  audit("Set wing term",`${wing} → ${termName(tid)}`);
+  DB.save(); notify("Wing term saved.","ok");
+}
+window.renderWingTermSettings=renderWingTermSettings; window.saveWingTerm=saveWingTerm;
+
+function renderClassTermSettings(){
+  const school=currentSchool();
+  const cids=homeroomClassIds(session.user.id);
+  if(!cids.length){ $("#content").innerHTML=`<div class="page-head"><div><h2>Set Class Term</h2><p>Not a Homeroom Teacher.</p></div></div>`; return; }
+  const terms=DB.data.terms.filter(t=>t.schoolId===school.id);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Set Class Term</h2></div></div>
+  ${cids.map(cid=>{
+    const current=effectiveTermId(classWing(cid),cid);
+    return `<div class="panel"><div class="ph"><h3>${esc(className(cid))}</h3></div><div class="pb">
+      <div class="form-grid"><div class="full"><label>Current Term</label>
+        <select id="ctTerm_${cid}">${terms.map(t=>`<option value="${t.id}" ${current===t.id?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div></div>
+      <button class="btn primary mt2" onclick="saveClassTerm('${cid}')">Save</button>
+    </div></div>`;
+  }).join("")}`;
+}
+function saveClassTerm(cid){
+  const tid=$("#ctTerm_"+cid).value;
+  const s=DB.data.settings[currentSchool().id];
+  if(!s.classTerms) s.classTerms={};
+  s.classTerms[cid]=tid;
+  DB.save(); notify("Class term saved.","ok");
+}
+window.renderClassTermSettings=renderClassTermSettings; window.saveClassTerm=saveClassTerm;
+
+function renderReports(){
+  const school=currentSchool();
+  const role=session.user.role;
+  let students;
+  let contextLabel="";
+  if(role==="superadmin"){
+    students = schoolStudents(school.id);
+    if(session.wing) students = students.filter(s=>classWing(s.classId)===session.wing);
+    contextLabel = session.wing? SCHOOL_CONFIG.wings[session.wing].label : "Both Wings";
+  } else if(role==="headteacher"){
+    students = schoolStudents(school.id).filter(s=>classWing(s.classId)===session.user.wing);
+    contextLabel = SCHOOL_CONFIG.wings[session.user.wing].label;
+  } else if(role==="teacher"){
+    const homeroomCids = homeroomClassIds(session.user.id);
+    if(homeroomCids.length){
+      students = schoolStudents(school.id).filter(s=>homeroomCids.includes(s.classId));
+      contextLabel = "Your Homeroom Class Reports";
+    } else {
+      $("#content").innerHTML = `
+        <div class="page-head"><div><h2>Reports</h2></div></div>
+        <div class="alert info">You are a <b>Subject Teacher</b>. You can enter marks in the Gradebook, but only <b>Homeroom Teachers</b> and Head Teachers can view student reports.</div>`;
+      return;
+    }
+  } else { students = []; }
+  const classes = role==="teacher"
+    ? schoolClasses(school.id).filter(c=>homeroomClassIds(session.user.id).includes(c.id))
+    : classesForCurrentUser();
+  const terms=DB.data.terms.filter(t=>t.schoolId===school.id);
+  const selTerm=$("#rpTerm")?.value|| (session.annualMode? "annual" : effectiveTermId(effectiveWing(),null));
+  const selClass=$("#rpClass")?.value||"";
+  const canBatchPrint = role!=="teacher" || homeroomClassIds(session.user.id).length>0;
+  $("#content").innerHTML = `
+  <div class="page-head">
+    <div><h2>Reports</h2><p>${esc(contextLabel)} · Term: <b>${esc(selTerm==="annual"?"Annual":termName(selTerm))}</b></p></div>
+    ${canBatchPrint?`<div class="row">
+      <button class="btn green" onclick="printClassReports()">🖨 Print Selected Class</button>
+      <button class="btn gold" onclick="downloadClassReportsPDF()">⬇ Download Class PDF</button>
+    </div>`:""}
+  </div>
+  ${role==="teacher"?`<div class="alert info">You can only view reports for your homeroom class.</div>`:""}
+  <div class="toolbar">
+    <div class="field"><label>Term</label><select id="rpTerm" onchange="renderReports()">
+      ${terms.map(t=>`<option value="${t.id}" ${selTerm===t.id?"selected":""}>${esc(t.name)}</option>`).join("")}
+      <option value="annual" ${selTerm==="annual"?"selected":""}>Annual</option>
+    </select></div>
+    ${role!=="teacher"?`<div class="field"><label>Class</label><select id="rpClass" onchange="renderReports()">
+      <option value="">Select a class</option>
+      ${classes.map(c=>`<option value="${c.id}" ${selClass===c.id?"selected":""}>${esc(c.name)} (${esc(SCHOOL_CONFIG.wings[c.wing].label)})</option>`).join("")}</select></div>`:""}
+    <div class="field"><label>Search</label><input id="rpSearch" placeholder="Name or ID..." oninput="renderReports()" value="${esc($("#rpSearch")?.value||"")}" /></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Actions</th></tr></thead>
+    <tbody>${students.filter(s=>{
+      const c=$("#rpClass")?.value, q=($("#rpSearch")?.value||"").toLowerCase();
+      return (!c||s.classId===c) && (!q||s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q));
+    }).map(s=>`<tr><td>${esc(s.id)}</td><td><strong>${esc(s.name)}</strong></td><td>${esc(className(s.classId))}</td>
+      <td><button class="btn primary sm" onclick="viewReport('${s.id}','${selTerm}')">View</button>
+          <button class="btn ghost sm" onclick="printReport('${s.id}','${selTerm}')">Print</button>
+          <button class="btn gold sm" onclick="downloadReportPDF('${s.id}','${selTerm}')">PDF</button></td></tr>`).join("")||`<tr><td colspan="4" class="empty">No students to show.</td></tr>`}</tbody>
+  </table></div>`;
+}
+window.renderReports=renderReports;
+
+function gradeHighlightClass(grade){
+  if(!grade) return "";
+  if(grade==="A*") return "hl-Astar";
+  if(grade==="A") return "hl-A";
+  if(grade==="B") return "hl-B";
+  if(grade==="C") return "hl-C";
+  if(grade==="D") return "hl-D";
+  if(grade==="E") return "hl-E";
+  if(grade==="U") return "hl-U";
+  return "";
+}
+
+function autoScaleReport(){
+  const reports = document.querySelectorAll("#reportPrintArea .a4-report, .report-scope .a4-report");
+  reports.forEach(report=>{
+    report.style.setProperty("--rp-scale", "1");
+    report.style.setProperty("--rp-remark-scale", "1");
+
+    /* --- 1. Scale remarks font to fit the remarks box --- */
+    const remarkBox = report.querySelector(".rp-remarks-body");
+    if(remarkBox){
+      remarkBox.style.setProperty("--rp-remark-scale", "1");
+      const boxH = remarkBox.clientHeight;
+      const scrollH = remarkBox.scrollHeight;
+      if(scrollH > boxH && boxH > 0){
+        let rs = boxH / scrollH;
+        if(rs < 0.55) rs = 0.55;
+        if(rs > 1) rs = 1;
+        rs = Math.round(rs * 100) / 100;
+        remarkBox.style.setProperty("--rp-remark-scale", String(rs));
+      }
+    }
+
+    /* --- 2. Scale the whole report if the body overflows --- */
+    const body = report.querySelector(".rp-body");
+    if(!body) return;
+    const topEl = report.querySelector(".rp-top");
+    const infoEl = report.querySelector(".rp-info-row");
+    const sigEl = report.querySelector(".rp-signature");
+    const footerEl = report.querySelector(".rp-footer-logos");
+    const pageH = report.clientHeight;
+    if(!pageH) return;
+    const fixedH =
+      (topEl? topEl.offsetHeight : 0) +
+      (infoEl? infoEl.offsetHeight : 0) +
+      (sigEl? sigEl.offsetHeight : 0) +
+      (footerEl? footerEl.offsetHeight : 0) +
+      4;
+    const availH = pageH - fixedH;
+    if(availH <= 0) return;
+    const content = body.querySelector(".rp-content");
+    if(!content) return;
+    const naturalH = content.scrollHeight;
+    if(naturalH <= availH) return;
+    let scale = availH / naturalH;
+    if(scale < 0.60) scale = 0.60;
+    if(scale > 1) scale = 1;
+    scale = Math.round(scale * 100) / 100;
+    report.style.setProperty("--rp-scale", String(scale));
+  });
+}
+window.autoScaleReport = autoScaleReport;
+
+function buildReportHtml(studentId, overrideTermId){
+  const school=currentSchool();
+  const s=DB.data.students.find(x=>x.id===studentId);
+  if(!s) return `<div class="alert bad">Student not found.</div>`;
+  const year=currentYear();
+  const annual = overrideTermId==="annual";
+  const termId = annual? null : (overrideTermId || effectiveTermId(classWing(s.classId), s.classId));
+  const term = annual? { name:"Annual" } : (DB.data.terms.find(t=>t.id===termId)||currentTerm());
+  const settings=DB.data.settings[school.id]||{};
+  const grading=settings.grading||APP.grading;
+  const wing=classWing(s.classId)||"primary";
+  const assess=assessmentFor(wing);
+  const wingCfg=SCHOOL_CONFIG.wings[wing];
+  const homeroom=homeroomTeacher(s.classId);
+
+  const subjects = subjectsForClass(school.id, s.classId);
+
+  const subjectRowFor=(sub)=>{
+    if(annual){
+      const terms=DB.data.terms.filter(t=>t.schoolId===school.id).slice(0,3);
+      let midSum=0, endSum=0, n=0;
+      terms.forEach(t=>{
+        const m=getMark(school.id,s.id,sub.id,year.id,t.id);
+        if(m && m.midterm!=null && m.endterm!=null){ midSum+=m.midterm; endSum+=m.endterm; n++; }
+      });
+      if(!n) return { sub, m:null, f:null, g:{grade:"",desc:""} };
+      const midAvg=Math.round((midSum/n)*10)/10;
+      const endAvg=Math.round((endSum/n)*10)/10;
+      const f=Math.round((midAvg+endAvg)*10)/10;
+      return { sub, m:{midterm:midAvg,endterm:endAvg}, f, g:gradeFor(f,grading) };
+    }
+    const m=getMark(school.id,s.id,sub.id,year.id,termId);
+    const f=m?finalMark(m,assess):null;
+    return { sub, m, f, g:f!=null?gradeFor(f,grading):{grade:"",desc:""} };
+  };
+  const rows=subjects.map(subjectRowFor);
+  const finals=rows.map(r=>r.f).filter(v=>v!=null);
+  const avg=finals.length?finals.reduce((a,b)=>a+b,0)/finals.length:null;
+  const overallGrade=avg!=null?gradeFor(avg,grading).grade:"";
+  const conduct = annual? {} : (DB.data.conduct.find(c=>c.schoolId===school.id&&c.studentId===s.id&&c.termId===termId&&c.yearId===year.id)||{});
+  const info = annual? {} : (DB.data.reportInfo?.find(r=>r.schoolId===school.id&&r.studentId===s.id&&r.termId===termId&&r.yearId===year.id)||{});
+  const comment = stripHtml(info.homeroomComment||"");
+  const logoLeft=SCHOOL_CONFIG.schoolLogo?`<img src="${esc(SCHOOL_CONFIG.schoolLogo)}" />`:`<span style="font-weight:800;color:#0b3d91">TS</span>`;
+  const logoRight=SCHOOL_CONFIG.secondaryLogo?`<img src="${esc(SCHOOL_CONFIG.secondaryLogo)}" />`:"";
+  const footerLogos=(SCHOOL_CONFIG.footerLogos||[]).map(l=>`<div class="flogo">${l.src?`<img src="${esc(l.src)}" />`:""}</div>`).join("");
+  const sigImg=wingCfg.signature?`<img src="${esc(wingCfg.signature)}" />`:"";
+  const hmSig=homeroom&&homeroom.signature?`<img src="${esc(homeroom.signature)}" />`:"";
+  const dateStr=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}).replace(/ /g,"-");
+
+  const stageLabel = className(s.classId) || "—";
+
+  return `
+  <div class="a4-report">
+    <div class="rp-top">
+      <div class="logo-left">${logoLeft}</div>
+      <div class="title-block"><h1>TRANSCRIPT</h1></div>
+      <div class="logo-right">${logoRight}</div>
+    </div>
+    <div class="rp-info-row">
+      <div class="rp-info-left">
+        <div class="line"><span class="lbl">Student Name:</span><span class="val">${esc(s.name)}</span></div>
+        <div class="line"><span class="lbl">H/Room Teacher:</span><span class="val">${esc(homeroom?homeroom.name:"—")}</span></div>
+      </div>
+      <div class="rp-info-right">
+        <div class="line"><span class="lbl">Stage:</span><span class="val">${esc(stageLabel)}</span></div>
+        <div class="line"><span class="lbl">Term:</span><span class="val">${annual?"Annual":esc(term.name.replace(/\D/g,""))}</span></div>
+        <div class="line"><span class="lbl">Date:</span><span class="val">${esc(dateStr)}</span></div>
+      </div>
+    </div>
+    <div class="rp-body">
+      <div class="rp-vertical-panel"><div class="vtext">${esc(SCHOOL_CONFIG.schoolName)}&nbsp;&nbsp;${esc(SCHOOL_CONFIG.academyName)}</div></div>
+      <div class="rp-content">
+        <table class="rp-subjects">
+          <thead><tr><th style="width:26%">SUBJECTS</th><th style="width:11%">MIDTERM</th><th style="width:11%">ENDTERM</th><th style="width:11%">TOTAL</th><th style="width:14%">OVERALL GRADE</th><th style="width:27%">REMARKS</th></tr></thead>
+          <tbody>${rows.length? rows.map(r=>`<tr>
+            <td class="sub-name">${esc(r.sub.name)}</td>
+            <td class="ctr">${numOrBlank(r.m?.midterm)}</td>
+            <td class="ctr">${numOrBlank(r.m?.endterm)}</td>
+            <td class="ctr">${r.f!=null?r.f:""}</td>
+            <td class="grade">${esc(r.g.grade)}</td>
+            <td class="remark">${esc(r.g.desc)}</td></tr>`).join("")
+            : `<tr><td colspan="6" class="ctr muted" style="padding:8px">No subjects assigned to a teacher for this class yet.</td></tr>`}
+          </tbody>
+        </table>
+        <div class="rp-remarks-title">REMARKS</div>
+        <div class="rp-remarks-body">${comment?esc(comment):`<div class="blank">&nbsp;</div>`}</div>
+        <div class="rp-conduct-title">CONDUCT</div>
+        <table class="rp-conduct-table">
+          <tr><td class="lbl">Cleanliness:</td><td>${esc(conduct.cleanliness||"")}</td></tr>
+          <tr><td class="lbl">Attentiveness:</td><td>${esc(conduct.attentiveness||"")}</td></tr>
+          <tr><td class="lbl">Friendliness:</td><td>${esc(conduct.friendliness||"")}</td></tr>
+          <tr><td class="lbl">Respectful:</td><td>${esc(conduct.respectful||"")}</td></tr>
+          <tr><td class="lbl">Leadership:</td><td>${esc(conduct.leadership||"")}</td></tr>
+        </table>
+        <div class="rp-bottom">
+          <div class="rp-attendance">
+            <div class="line"><span class="lbl">Days Absent:</span><span class="val">${conduct.daysAbsent??""}</span></div>
+            <div class="line"><span class="lbl">Overall Grade:</span><span class="val">${esc(overallGrade)}</span></div>
+            <div class="line"><span class="lbl">Overall Average:</span><span class="val">${avg!=null?avg.toFixed(1):""}</span></div>
+          </div>
+          <div class="rp-grading">
+            <div class="gtitle">GRADING SYSTEM</div>
+            <table class="rp-grading-table">
+              ${grading.map(g=>{
+                const isCurrent = overallGrade === g.grade;
+                const cls = isCurrent ? gradeHighlightClass(g.grade) : "";
+                return `<tr class="${cls}"><td>${g.min} - ${g.max}</td><td>${g.grade}</td><td class="desc">${g.desc}</td></tr>`;
+              }).join("")}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rp-signature">
+      <div class="sig-box">
+        <div class="name">Homeroom Teacher</div>
+        <div class="sig-img">${hmSig}</div>
+        <div class="line"></div>
+        <div class="role">${esc(homeroom?homeroom.name:"—")}</div>
+        <div class="sign-label">Sign</div>
+      </div>
+      <div class="sig-box">
+        <div class="name">Head of School</div>
+        <div class="sig-img">${sigImg}</div>
+        <div class="line"></div>
+        <div class="role">${esc(wingCfg.headOfSchool)}</div>
+        <div class="sign-label">Sign and Stamp</div>
+      </div>
+    </div>
+    <div class="rp-footer-logos">${footerLogos}</div>
+  </div>`;
+}
+function viewReport(sid,termId){
+  const role = session.user.role;
+  const s = DB.data.students.find(x=>x.id===sid);
+  if(!s){ notify("Student not found.","bad"); return; }
+  if(role==="teacher"){
+    const homeroomCids = homeroomClassIds(session.user.id);
+    if(!homeroomCids.includes(s.classId)){ notify("You can only view reports for your homeroom class.","bad"); return; }
+  }
+  if(role==="headteacher" && classWing(s.classId)!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  const html=buildReportHtml(sid,termId);
+  openModal("Report Preview", `<div class="report-scope" id="reportPreviewScope">${html}</div>`,
+    `<button class="btn ghost" onclick="closeModal()">Close</button>
+     <button class="btn ghost" onclick="printReport('${sid}','${termId||""}')">🖨 Print</button>
+     <button class="btn gold" onclick="downloadReportPDF('${sid}','${termId||""}')">⬇ PDF</button>`);
+  setTimeout(()=>{ autoScaleReport(); }, 80);
+}
+function printReport(sid,termId){
+  const role = session.user.role;
+  const s = DB.data.students.find(x=>x.id===sid);
+  if(!s){ notify("Student not found.","bad"); return; }
+  if(role==="teacher"){
+    const homeroomCids = homeroomClassIds(session.user.id);
+    if(!homeroomCids.includes(s.classId)){ notify("Only your homeroom.","bad"); return; }
+  }
+  if(role==="headteacher" && classWing(s.classId)!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  $("#reportPrintArea").innerHTML=buildReportHtml(sid,termId);
+  $("#reportPrintArea").classList.remove("hidden");
+  setTimeout(()=>{ autoScaleReport(); setTimeout(()=>{ autoScaleReport(); window.print(); clearReportArea(); }, 250); }, 60);
+}
+function downloadReportPDF(sid,termId){
+  const role = session.user.role;
+  const s = DB.data.students.find(x=>x.id===sid);
+  if(!s){ notify("Student not found.","bad"); return; }
+  if(role==="teacher"){
+    const homeroomCids = homeroomClassIds(session.user.id);
+    if(!homeroomCids.includes(s.classId)){ notify("You can only download reports for your homeroom class.","bad"); return; }
+  }
+  if(role==="headteacher" && classWing(s.classId)!==session.user.wing){ notify("Only your wing.","bad"); return; }
+  $("#reportPrintArea").innerHTML = buildReportHtml(sid,termId);
+  $("#reportPrintArea").classList.remove("hidden");
+  notify("In the print dialog, choose 'Save as PDF' as the destination.","ok");
+  setTimeout(()=>{ autoScaleReport(); setTimeout(()=>{ autoScaleReport(); window.print(); clearReportArea(); }, 280); }, 60);
+}
+window.viewReport=viewReport; window.printReport=printReport; window.downloadReportPDF=downloadReportPDF;
+
+function printClassReports(forcedClassId){
+  const school=currentSchool();
+  const role=session.user.role;
+  let classId = forcedClassId || $("#rpClass")?.value;
+  if(role==="teacher"){
+    const homeroomCids = homeroomClassIds(session.user.id);
+    if(!homeroomCids.length){ notify("Only Homeroom Teachers can batch-print.","bad"); return; }
+    classId = homeroomCids[0];
+    if(forcedClassId && !homeroomCids.includes(forcedClassId)){ notify("Only your homeroom.","bad"); return; }
+  } else if(!classId){ classId = homeroomClassIds(session.user.id)[0]; }
+  if(!classId){ notify("Select a class first.","warn"); return; }
+  const students=schoolStudents(school.id).filter(s=>s.classId===classId);
+  if(!students.length){ notify("No students.","warn"); return; }
+  const termId=$("#rpTerm")?.value||effectiveTermId(classWing(classId),classId);
+  const combined=students.map(s=>`<div class="batch-page">${buildReportHtml(s.id,termId)}</div>`).join("");
+  $("#reportPrintArea").innerHTML = `<style>#reportPrintArea .batch-page{page-break-after:always;page-break-inside:avoid;height:297mm;overflow:hidden}#reportPrintArea .batch-page:last-child{page-break-after:auto}</style>${combined}`;
+  $("#reportPrintArea").classList.remove("hidden");
+  notify(`Preparing ${students.length} report(s)...`,"ok");
+  setTimeout(()=>{ autoScaleReport(); setTimeout(()=>{ autoScaleReport(); window.print(); clearReportArea(); }, 400); }, 80);
+}
+function downloadClassReportsPDF(cid){ printClassReports(cid); }
+window.printClassReports=printClassReports; window.downloadClassReportsPDF=downloadClassReportsPDF;
+
+function renderTeacherBatchPrint(){
+  const cids=homeroomClassIds(session.user.id);
+  if(!cids.length){ $("#content").innerHTML=`<div class="page-head"><div><h2>Print Class Reports</h2><p>Not a Homeroom Teacher.</p></div></div>`; return; }
+  const school=currentSchool();
+  const terms=DB.data.terms.filter(t=>t.schoolId===school.id);
+  const selClass=$("#bpClass")?.value||cids[0];
+  const selTerm=$("#bpTerm")?.value||effectiveTermId(classWing(selClass),selClass);
+  const students=schoolStudents(school.id).filter(s=>s.classId===selClass);
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Print Class Reports</h2></div></div>
+  <div class="panel"><div class="pb">
+    <div class="form-grid">
+      <div><label>Homeroom Class</label><select id="bpClass" onchange="renderTeacherBatchPrint()">${cids.map(c=>`<option value="${c}" ${selClass===c?"selected":""}>${esc(className(c))}</option>`).join("")}</select></div>
+      <div><label>Term</label><select id="bpTerm" onchange="renderTeacherBatchPrint()">
+        ${terms.map(t=>`<option value="${t.id}" ${selTerm===t.id?"selected":""}>${esc(t.name)}</option>`).join("")}
+        <option value="annual" ${selTerm==="annual"?"selected":""}>Annual</option>
+      </select></div>
+    </div>
+    <div class="alert info mt2"><b>${students.length} student(s)</b>.</div>
+    <div class="row mt2">
+      <button class="btn green" onclick="printClassReports('${selClass}')">🖨 Print All</button>
+      <button class="btn gold" onclick="downloadClassReportsPDF('${selClass}')">⬇ Download All</button>
+    </div>
+  </div></div>`;
+}
+window.renderTeacherBatchPrint=renderTeacherBatchPrint;
+
+function renderProfile(){
+  const u=session.user;
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>My Profile & Signature</h2></div></div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Account</h3></div><div class="pb">
+      <div class="form-grid">
+        <div><label>Name</label><input value="${esc(u.name)}" disabled /></div>
+        <div><label>Username</label><input value="${esc(u.username)}" disabled /></div>
+        <div><label>Role</label><input value="${esc(u.role)}" disabled /></div>
+        <div><label>Wing</label><input value="${u.wing?esc(SCHOOL_CONFIG.wings[u.wing].label):"—"}" disabled /></div>
+      </div>
+      <div class="mt3"><label>Change Password</label>
+        <div class="row"><input id="newPw" type="password" placeholder="New password" style="padding:10px 12px;border:1.5px solid var(--line);border-radius:10px" />
+        <button class="btn primary" onclick="changeOwnPassword()">Update</button></div>
+      </div>
+    </div></div>
+    <div class="panel"><div class="ph"><h3>My Signature</h3></div><div class="pb">
+      <div class="sig-pad ${u.signature?"has-sig":""}" onclick="document.getElementById('ownSigFile').click()">
+        ${u.signature?`<img src="${esc(u.signature)}" />`:`<div class="ph">Click to upload your signature</div>`}
+      </div>
+      <input type="file" id="ownSigFile" accept="image/png,image/jpeg" class="hidden" onchange="uploadOwnSignature(event)" />
+      ${u.signature?`<button class="btn danger mt2" onclick="removeOwnSignature()">Remove</button>`:""}
+    </div></div>
+  </div>`;
+}
+function changeOwnPassword(){ const np=$("#newPw").value; if(!np||np.length<5){ notify("Min 5 chars.","bad"); return; } session.user.password=np; const u=DB.data.users.find(x=>x.id===session.user.id); if(u) u.password=np; DB.save(); notify("Updated.","ok"); }
+function uploadOwnSignature(ev){ const file=ev.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=()=>{ const u=DB.data.users.find(x=>x.id===session.user.id); u.signature=r.result; session.user.signature=r.result; DB.save(); notify("Attached.","ok"); renderProfile(); }; r.readAsDataURL(file); }
+function removeOwnSignature(){ const u=DB.data.users.find(x=>x.id===session.user.id); u.signature=""; session.user.signature=""; DB.save(); renderProfile(); }
+window.changeOwnPassword=changeOwnPassword; window.uploadOwnSignature=uploadOwnSignature; window.removeOwnSignature=removeOwnSignature;
+
+function renderHeadDash(){
+  const school=currentSchool();
+  const wing=session.user.wing;
+  const classes=schoolClasses(school.id,wing);
+  const students=schoolStudents(school.id).filter(s=>classes.map(c=>c.id).includes(s.classId));
+  const assess=assessmentFor(wing);
+  const marks=DB.data.marks.filter(m=>m.schoolId===school.id && students.some(s=>s.id===m.studentId));
+  const avg=marks.length?marks.reduce((a,m)=>a+(finalMark(m,assess)||0),0)/marks.length:0;
+  const struggling=marks.filter(m=>isStruggling(finalMark(m,assess))).length;
+  const wingCfg=SCHOOL_CONFIG.wings[wing];
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>${esc(wingCfg.label)} Dashboard</h2>
+    <p>${esc(wingCfg.range)} · HOS: <b>${esc(wingCfg.headOfSchool)}</b> · Working Term: <b>${esc(session.annualMode?"Annual":termName(effectiveTermId(wing,null)))}</b></p></div></div>
+  <div class="cards">
+    <div class="card stat"><div class="ic blue">🎓</div><div><b>${students.length}</b><small>Students</small></div></div>
+    <div class="card stat"><div class="ic gold">📚</div><div><b>${schoolSubjects(school.id).length}</b><small>Subjects</small></div></div>
+    <div class="card stat"><div class="ic green">📈</div><div><b>${money(avg)}%</b><small>Wing Average</small></div></div>
+    <div class="card stat"><div class="ic red">⚠️</div><div><b>${struggling}</b><small>Struggling Marks</small></div></div>
+  </div>
+  <div class="panel mt3"><div class="ph"><h3>Quick Actions</h3></div><div class="pb"><div class="row">
+    <button class="btn primary" onclick="navigate('hsubjects')">📚 Manage Subjects</button>
+    <button class="btn primary" onclick="navigate('hclasses')">🏫 Classes & Streams</button>
+    <button class="btn primary" onclick="navigate('hterms')">🗓️ Set Wing Term</button>
+    <button class="btn primary" onclick="navigate('hsettings')">⚙️ Mark Limits</button>
+    <button class="btn green" onclick="navigate('hanalysis')">📈 Analysis Hub</button>
+    <button class="btn gold" onclick="navigate('hpromote')">⬆️ Promotion</button>
+  </div></div></div>
+  <div class="alert info">You are locked to the <b>${esc(wingCfg.label)}</b>.</div>`;
+}
+function renderWingSettings(){
+  const wing=session.user.wing;
+  const assess=assessmentFor(wing);
+  const wingCfg=SCHOOL_CONFIG.wings[wing];
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Wing Settings — ${esc(wingCfg.label)}</h2></div></div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Mark Limits</h3></div><div class="pb">
+      <div class="form-grid">
+        <div><label>Midterm Max Marks</label><input id="wsMid" type="number" min="1" max="100" value="${assess.midterm}" /></div>
+        <div><label>End Term Max Marks</label><input id="wsEnd" type="number" min="1" max="100" value="${assess.endterm}" /></div>
+      </div>
+      <button class="btn primary mt2" onclick="saveWingAssessment()">Save</button>
+    </div></div>
+    <div class="panel"><div class="ph"><h3>Wing Info</h3></div><div class="pb">
+      <div class="small muted">Head of School: <b>${esc(wingCfg.headOfSchool)}</b></div>
+      <div class="small muted">Signature: ${esc(wingCfg.signature)}</div>
+    </div></div>
+  </div>`;
+}
+function saveWingAssessment(){
+  const wing=session.user.wing;
+  const m=+$("#wsMid").value, e=+$("#wsEnd").value;
+  if(m<=0||e<=0){ notify("Must be > 0.","bad"); return; }
+  if(m+e!==100){ notify("Must sum to 100.","bad"); return; }
+  const s=DB.data.settings[currentSchool().id];
+  if(!s.wingAssessment) s.wingAssessment={};
+  s.wingAssessment[wing]={ midterm:m, endterm:e };
+  audit("Set wing assessment",`${wing} → ${m}/${e}`);
+  DB.save(); notify("Saved.","ok"); renderWingSettings();
+}
+window.renderWingSettings=renderWingSettings; window.saveWingAssessment=saveWingAssessment;
+
+function renderSuperBackup(){
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Backup</h2></div></div>
+  <div class="panel"><div class="pb">
+    <button class="btn primary" onclick="exportBackup()">💾 Download Full Backup</button>
+    <button class="btn ghost" onclick="document.getElementById('restoreFile').click()">📂 Restore</button>
+    <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="restoreBackup(this.files[0])" />
+  </div></div>`;
+}
+function exportBackup(){ const blob=new Blob([JSON.stringify(DB.data,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`tsa_backup_${todayISO()}.json`; a.click(); notify("Downloaded.","ok"); }
+function restoreBackup(file){ if(!file) return; const r=new FileReader(); r.onload=()=>{ try{ DB.data=JSON.parse(r.result); DB.save(); notify("Restored.","ok"); navigate(currentPage); }catch(e){ notify("Invalid file.","bad"); } }; r.readAsText(file); }
+window.exportBackup=exportBackup; window.restoreBackup=restoreBackup;
+
+function renderSchoolBackup(){
+  const school=currentSchool();
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>School Backup</h2></div></div>
+  <div class="panel"><div class="pb"><button class="btn primary" onclick="exportSchoolBackup()">💾 Download</button></div></div>`;
+}
+function exportSchoolBackup(){
+  const school=currentSchool();
+  const data={ school, students:DB.data.students.filter(s=>s.schoolId===school.id), users:DB.data.users.filter(u=>u.schoolId===school.id), marks:DB.data.marks.filter(m=>m.schoolId===school.id), subjects:DB.data.subjects.filter(s=>s.schoolId===school.id), classes:DB.data.classes.filter(c=>c.schoolId===school.id), terms:DB.data.terms.filter(t=>t.schoolId===school.id), years:DB.data.academicYears.filter(y=>y.schoolId===school.id), settings:DB.data.settings[school.id]||{} };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`${school.code}_backup_${todayISO()}.json`; a.click();
+  notify("Downloaded.","ok");
+}
+window.renderSchoolBackup=renderSchoolBackup; window.exportSchoolBackup=exportSchoolBackup;
+
+function renderAudit(){
+  const logs=DB.data.auditLogs;
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>Audit Logs</h2></div>
+    <button class="btn ghost" onclick="exportAudit()">Export CSV</button></div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr></thead>
+    <tbody>${logs.map(l=>`<tr><td class="small">${new Date(l.ts).toLocaleString()}</td><td>${esc(l.user)}</td><td>${esc(l.action)}</td><td class="small">${esc(l.detail||"")}</td></tr>`).join("")||`<tr><td colspan="4" class="empty">No logs.</td></tr>`}</tbody>
+  </table></div>`;
+}
+function exportAudit(){ const rows=[["Time","User","Action","Detail"],...DB.data.auditLogs.map(l=>[l.ts,l.user,l.action,l.detail||""])]; const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",")).join("\n"); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="audit_log.csv"; a.click(); }
+window.renderAudit=renderAudit; window.exportAudit=exportAudit;
+
+function renderReadme(){
+  if(session.user.role!=="superadmin"){ $("#content").innerHTML=`<div class="alert bad">Restricted to Super Admin.</div>`; return; }
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>README (Restricted)</h2></div></div>
+  <div class="panel"><div class="pb">
+    <h3 style="color:var(--green)">Tanganyika – Sky Wings Academy</h3>
+    <p class="small mt1">Academic Management System · v${esc(APP.version)}</p>
+    <h4 class="mt3">Roles</h4>
+    <ul style="margin-left:18px;font-size:13px;line-height:1.8">
+      <li><b>Super Admin</b> — Full access to both wings. All pages, users, classes, subjects, reports, analysis, promotion, backup, audit.</li>
+      <li><b>Head Teacher</b> — Locked to own wing.</li>
+      <li><b>Teacher</b> — Only assigned classes/subjects. Can teach in both wings.</li>
+      <li><b>Homeroom Teacher</b> — Additionally enters Remarks &amp; Character and views reports — only for their homeroom class.</li>
+      <li><b>Subject-only Teacher</b> — Marks only. No reports.</li>
+    </ul>
+    <p class="mt3 muted small">Developed by Rasul A. Mngazija</p>
+  </div></div>`;
+}
+window.renderReadme=renderReadme;
+
+function renderSystemSettings(){
+  $("#content").innerHTML = `
+  <div class="page-head"><div><h2>System Settings</h2></div></div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Wings</h3></div><div class="pb">
+      <div class="small muted">Primary: Ms. Neha · Reception–Y6</div>
+      <div class="small muted">Secondary: Rasul Mngazija · Y7–Y13</div>
+    </div></div>
+    <div class="panel"><div class="ph"><h3>Grading</h3></div><div class="pb">
+      <table class="tbl"><thead><tr><th>Range</th><th>Grade</th><th>Description</th></tr></thead>
+      <tbody>${APP.grading.map(g=>`<tr><td>${g.min}–${g.max}</td><td><span class="badge ${gradeClass(g.grade)}">${g.grade}</span></td><td>${g.desc}</td></tr>`).join("")}</tbody>
+    </table>
+    </div></div>
+  </div>
+  <div class="panel"><div class="ph"><h3>About</h3></div><div class="pb">
+    <div class="small">Version: ${APP.version}</div>
+    <div class="small">Developed by Rasul A. Mngazija</div>
+  </div></div>`;
+}
+window.renderSystemSettings=renderSystemSettings;
+
+function applyBranding(){
+  const school=session.school||DB.data.schools[0];
+  $("#loginSchoolName").textContent=SCHOOL_CONFIG.schoolName.toUpperCase();
+  $("#sideSchool").textContent=school.name;
+  const logoHtml=school.logo?`<img src="${esc(school.logo)}" alt="logo" />`:`<span>TS</span>`;
+  $("#loginLogo").innerHTML=logoHtml;
+  $("#sideLogo").innerHTML=logoHtml;
+  $("#sideRole").textContent=session.user?(session.user.role==="superadmin"?"Super Admin":session.user.role==="headteacher"?"Head Teacher":"Teacher"):"Academic System";
+  const wingEl=$("#sideWing");
+  if(session.user && session.user.role==="headteacher"){ wingEl.innerHTML=`<span class="wing-badge ${session.user.wing}">${esc(SCHOOL_CONFIG.wings[session.user.wing].label)}</span>`; }
+  else if(session.user && session.user.role==="teacher"){
+    const ws=teacherWings(session.user.id);
+    wingEl.innerHTML = ws.map(w=>`<span class="wing-badge ${w}">${esc(SCHOOL_CONFIG.wings[w].label)}</span>`).join(" ");
+  }
+  else if(session.user && session.user.role==="superadmin" && session.wing){ wingEl.innerHTML=`<span class="wing-badge ${session.wing}">Viewing: ${esc(SCHOOL_CONFIG.wings[session.wing].label)}</span>`; }
+  else wingEl.innerHTML="";
+  $("#userName").textContent=session.user?session.user.name:"—";
+  $("#userRole").textContent=session.user?(session.user.role==="headteacher"?"Head · "+SCHOOL_CONFIG.wings[session.user.wing].label:session.user.role):"—";
+  $("#userAv").textContent=session.user?initials(session.user.name):"?";
+  updateTermChip();
+}
+function doLogin(username,password,remember){
+  const u=DB.data.users.find(x=>x.username.toLowerCase()===username.toLowerCase() && x.password===password);
+  if(!u) return { ok:false, msg:"Invalid username or password." };
+  if(u.active===false) return { ok:false, msg:"Account disabled." };
+  session.user=u; session.school=DB.data.schools[0];
+  if(u.role==="superadmin"){ session.wing = null; }
+  else if(u.role==="headteacher"){ session.wing = u.wing; }
+  else if(u.role==="teacher"){
+    const ws = teacherWings(u.id);
+    session.wing = ws[0] || u.wing || "primary";
+  }
+  session.viewTermId = null;
+  session.annualMode = false;
+  session.save(remember);
+  return { ok:true };
+}
+function afterLogin(){
+  $("#loginView").style.display="none";
+  $("#app").classList.add("on");
+  applyBranding(); renderNav();
+  if(session.user.role==="superadmin") navigate("sdash");
+  else if(session.user.role==="headteacher") navigate("hdash");
+  else navigate("tdash");
+  setTimeout(()=>{ if(!session.viewTermId && !session.annualMode) openTermPicker(); }, 500);
+}
+$("#loginForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const r=doLogin($("#loginUser").value.trim(),$("#loginPass").value,$("#rememberMe").checked);
+  if(r.ok){ $("#loginMsg").innerHTML=""; afterLogin(); toast("Welcome, "+session.user.name,"ok"); }
+  else $("#loginMsg").innerHTML=`<div class="alert bad">${esc(r.msg)}</div>`;
+});
+$("#togglePass").addEventListener("click",()=>{ const p=$("#loginPass"); p.type=p.type==="password"?"text":"password"; });
+$("#logoutBtn").addEventListener("click",()=>{ session.clear(); $("#app").classList.remove("on"); $("#loginView").style.display="flex"; $("#loginUser").value=""; $("#loginPass").value=""; $("#loginMsg").innerHTML=""; clearReportArea(); });
+$("#menuBtn").addEventListener("click",()=>$("#sidebar").classList.toggle("open"));
+
+function updateNet(){ const on=navigator.onLine; $("#netDot").className="status-dot "+(on?"on":"off"); $("#netText").textContent=on?"Online":"Offline"; const b=$("#connBadge"); b.className="conn "+(on?"on":"off"); b.textContent=on?"ONLINE":"OFFLINE"; }
+window.addEventListener("online",updateNet); window.addEventListener("offline",updateNet);
+
+(function registerSW(){ if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{}); })();
+(function installPrompt(){
+  let deferred=null;
+  const btn=document.getElementById("installBtn"), banner=document.getElementById("installBanner");
+  const bBtn=document.getElementById("installBannerBtn"), dis=document.getElementById("installDismiss");
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  const standalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+  if(standalone) return;
+  window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferred=e; btn.classList.remove("hidden"); banner.classList.remove("hidden"); });
+  if(isIOS){ btn.classList.remove("hidden");
+    btn.addEventListener("click",()=>openModal("Install on iPhone/iPad",`
+      <ol style="margin-left:18px;line-height:1.9"><li>Open in <b>Safari</b>.</li><li>Tap <b>Share</b>.</li><li>Tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>`,
+      `<button class="btn ghost" onclick="closeModal()">Got it</button>`));
+  }
+  const go=async()=>{
+    if(!deferred){ notify("Use your browser's Install option.","warn"); return; }
+    deferred.prompt(); const { outcome }=await deferred.userChoice;
+    if(outcome==="accepted") notify("Installed.","ok");
+    deferred=null; btn.classList.add("hidden"); banner.classList.add("hidden");
+  };
+  if(btn) btn.addEventListener("click",go);
+  if(bBtn) bBtn.addEventListener("click",go);
+  if(dis) dis.addEventListener("click",()=>banner.classList.add("hidden"));
+  window.addEventListener("appinstalled",()=>{ banner.classList.add("hidden"); btn.classList.add("hidden"); });
+})();
+
+(function boot(){
+  DB.load(); session.load();
+  $("#yr").textContent=new Date().getFullYear();
+  updateNet();
+  if(session.user){
+    const school=DB.data.schools[0];
+    if(school){ session.school=school; afterLogin(); return; }
+    session.clear();
+  }
+  applyBranding();
+})();
+</script>
+</body>
+</html>
