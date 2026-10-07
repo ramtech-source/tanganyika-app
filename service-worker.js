@@ -4,7 +4,6 @@
              cache-first for assets (fast, offline-friendly). */
 
 const CACHE_NAME = 'tsa-sky-wings-v3';
-
 const CORE = [
   './',
   './index.html',
