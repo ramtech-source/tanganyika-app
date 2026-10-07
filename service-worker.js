@@ -3,7 +3,7 @@
    Strategy: network-first for HTML (always check for updates),
              cache-first for assets (fast, offline-friendly). */
 
-const CACHE_NAME = 'tsa-sky-wings-v2';
+const CACHE_NAME = 'tsa-sky-wings-v3';
 
 const CORE = [
   './',
